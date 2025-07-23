@@ -205,4 +205,57 @@
   .animation-delay-600 {
     animation-delay: 600ms;
   }
+  
+  /* Prose styles for markdown content */
+  .prose {
+    @apply text-foreground;
+  }
+  
+  .prose strong {
+    @apply font-semibold text-foreground;
+  }
+  
+  .prose em {
+    @apply italic text-foreground;
+  }
+  
+  .prose code {
+    @apply bg-muted px-1 py-0.5 rounded text-sm font-mono;
+  }
+  
+  .prose a {
+    @apply text-primary hover:text-primary/80 underline;
+  }
+  
+  .prose ul {
+    @apply list-disc list-inside space-y-1;
+  }
+  
+  .prose ol {
+    @apply list-decimal list-inside space-y-1;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    @apply font-semibold text-foreground mt-4 mb-2;
+  }
+  
+  .prose h1 {
+    @apply text-2xl;
+  }
+  
+  .prose h2 {
+    @apply text-xl;
+  }
+  
+  .prose h3 {
+    @apply text-lg;
+  }
+  
+  .prose p {
+    @apply mb-3;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-primary/20 pl-4 italic text-muted-foreground;
+  }
 }
