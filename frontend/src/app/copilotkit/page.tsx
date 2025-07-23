@@ -1,12 +1,11 @@
 "use client";
 
-import { AssistantMessageProps, CopilotSidebar, UserMessageProps } from "@copilotkit/react-ui";
+import { UserMessageProps } from "@copilotkit/react-ui";
 import ResearchAssistant from "../components/Researcher";
 import { Header } from "../components/Header";
 
 
 import { CopilotChat } from "@copilotkit/react-ui";
-import { CustomChatInterface } from "../components/CustomChat";
 import { User } from "lucide-react";
 
 const CustomUserMessage = (props: UserMessageProps) => {
@@ -27,28 +26,6 @@ const CustomUserMessage = (props: UserMessageProps) => {
   );
 };
 
-// const CustomAssistantMessage = (props: AssistantMessageProps) => {  
-//   const wrapperStyles = "flex items-center gap-2 justify-start mb-4";
-//   const messageStyles =
-//     "bg-card border border-border text-foreground py-2 px-4 rounded-xl break-words flex-shrink-0 max-w-[80%] shadow-sm";
-//   const avatarStyles =
-//     "bg-card border border-border shadow-sm min-h-10 min-w-10 rounded-full text-foreground flex items-center justify-center font-semibold text-lg";
- 
-//   return (
-//     <div className={wrapperStyles}>
-//       <div className={avatarStyles}>TS</div>
-//       <div className={messageStyles}>{props.message}</div>
-//     </div>
-//   );
-// };  
-
-type ResearchAgentState = {
-  current_stage: string;
-  progress: number;
-  search_results: any[];
-  report: string;
-  completed: boolean;
-};
 
 export default function CopilotKitPage() {
 
@@ -66,9 +43,7 @@ export default function CopilotKitPage() {
           }}
           className="h-full max-h-[740px] m-4 pb-4 bg-background overflow-hidden rounded-xl border border-border shadow-lg"
           UserMessage={CustomUserMessage}
-          //AssistantMessage={CustomAssistantMessage}
         />
-        {/* <CustomChatInterface /> */}
       </main>
     </div>
   );

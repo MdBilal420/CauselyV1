@@ -1,21 +1,15 @@
 import os
-from typing import TypedDict
 from dotenv import load_dotenv
 load_dotenv()
 from langgraph.graph import Graph, END
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-import openai
 import requests
 from langchain_groq import ChatGroq
-from langchain_core.runnables import RunnableConfig
-import asyncio
-from datetime import datetime
 
 
 
 
 def web_search(query):
-    print(f"[DEBUG] Searching for: {query}")
     api_key = os.environ["SERPER_API_KEY"]
     url = "https://google.serper.dev/search"
     headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
@@ -30,11 +24,8 @@ def web_search(query):
     people_also_ask = results.get("peopleAlsoAsk", [])
     
     if not organic_results:
-        print(f"[DEBUG] Full Serper response: {results}")
-        print("[DEBUG] No search results found.")
         return "No relevant research results were found on the topic."
     
-    print(f"[DEBUG] Serper results: {len(organic_results)} organic results found")
     
     # Compile all results into a structured format
     compiled_results = {
@@ -100,35 +91,11 @@ def create_detailed_report(search_results):
         related_searches_text, 
         paa_text
     ]))
-    
-    print(f"[DEBUG] Creating detailed report from search results: {all_research[:500]}...")  # Print only first 500 chars
-    
+     
     client = ChatGroq(model="llama3-8b-8192")
     
     # Create system and user messages for ChatGroq
-    system_message = SystemMessage(content="""Create a comprehensive research report on the topic using the provided search results. 
-    Your report should be well-structured with the following sections:
-
-    1. EXECUTIVE SUMMARY: A brief overview of the topic and key findings (2-3 sentences)
-    
-    2. INTRODUCTION: Background information on the topic and why it matters
-    
-    3. KEY FINDINGS: The main insights organized as bullet points
-    
-    4. DETAILED ANALYSIS: In-depth exploration of the topic with subsections as needed
-       - Include answers to common questions when available
-       - Address related topics identified in the research
-    
-    5. CONCLUSIONS: Summary of the most important takeaways
-    
-    6. FURTHER RESEARCH: Suggest related topics worth exploring 
-    
-    7. SOURCES: List all sources from the search results with their URLs
-    
-    Format the report with clear section headings and organized content. Include relevant facts, statistics, 
-    and quotes from the sources when available. Maintain a professional, objective tone throughout.
-    Use markdown formatting for better readability, with # for main headings and ## for subheadings.
-    """)
+    system_message = SystemMessage(content="Provide a short summary of the topic based on the provided search results. Just give the main idea and key points in 2-4 sentences.")
     
     user_message = HumanMessage(content=all_research)
     
@@ -136,7 +103,7 @@ def create_detailed_report(search_results):
     response = client.invoke([system_message, user_message])
     
     report = response.content
-    print(f"[DEBUG] Detailed research report generated (excerpt): {report[:300]}...")
+
     return report
 
 async def research_node(state):
@@ -153,7 +120,6 @@ async def research_node(state):
         
         # Get the query from the last message
         query = messages[-1].content
-        print(f"[DEBUG] Research node processing query: {query}")
         
         # Perform search (web_search is not async, so we don't await it)
         search_results = web_search(query)
@@ -169,7 +135,6 @@ async def research_node(state):
         
     except Exception as e:
         error_msg = f"Research process failed: {str(e)}"
-        print(f"[DEBUG] Research node error: {error_msg}")
         return [AIMessage(content=error_msg)]
 
 def build_research_graph():
@@ -200,9 +165,7 @@ def build_research_graph():
     # Compile the graph before returning it
     try:
         compiled_graph = workflow.compile()
-        print(f"[DEBUG] Graph compiled successfully: {type(compiled_graph)}")
         return compiled_graph
     except Exception as e:
-        print(f"[DEBUG] Graph compilation failed: {str(e)}")
         # Return the uncompiled graph as fallback
         return workflow
