@@ -1,4 +1,5 @@
 import os
+from typing import TypedDict
 from dotenv import load_dotenv
 load_dotenv()
 from langgraph.graph import Graph, END
@@ -6,6 +7,12 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 import openai
 import requests
 from langchain_groq import ChatGroq
+from langchain_core.runnables import RunnableConfig
+import asyncio
+from datetime import datetime
+
+
+
 
 def web_search(query):
     print(f"[DEBUG] Searching for: {query}")
@@ -132,12 +139,38 @@ def create_detailed_report(search_results):
     print(f"[DEBUG] Detailed research report generated (excerpt): {report[:300]}...")
     return report
 
-def research_node(messages):
-    last = messages[-1]
-    query = last.content
-    search_results = web_search(query)
-    report = create_detailed_report(search_results)
-    return [AIMessage(content=report)]
+async def research_node(state):
+    try:
+        # In LangGraph, when passing messages directly, state is the list of messages
+        if isinstance(state, list):
+            messages = state
+        else:
+            # Fallback for dictionary state format
+            messages = state.get("messages", [])
+        
+        if not messages:
+            return [AIMessage(content="No query provided")]
+        
+        # Get the query from the last message
+        query = messages[-1].content
+        print(f"[DEBUG] Research node processing query: {query}")
+        
+        # Perform search (web_search is not async, so we don't await it)
+        search_results = web_search(query)
+        
+        # Check if search failed
+        if isinstance(search_results, str):
+            return [AIMessage(content=search_results)]
+        
+        # Generate report
+        report = create_detailed_report(search_results)
+        
+        return [AIMessage(content=report)]
+        
+    except Exception as e:
+        error_msg = f"Research process failed: {str(e)}"
+        print(f"[DEBUG] Research node error: {error_msg}")
+        return [AIMessage(content=error_msg)]
 
 def build_research_graph():
     """
