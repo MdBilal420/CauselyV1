@@ -12,14 +12,15 @@ export function Header({ className }: HeaderProps) {
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <Image
+            {/* <Image
               src="/next.svg"
               alt="Logo"
               width={120}
               height={30}
               className="dark:invert"
               priority
-            />
+            /> */}
+            <h1 className="text-2xl font-bold text-primary">Causely</h1>
           </Link>
         </div>
 
