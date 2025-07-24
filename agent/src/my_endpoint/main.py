@@ -46,7 +46,7 @@ from langgraph.graph import Graph
 from langchain_core.messages import AIMessage, HumanMessage
 
 # Local research agent components
-from src.my_endpoint.langgraph_research_agent import build_research_graph, web_search, create_detailed_report
+from src.my_endpoint.langgraph_research_agent import build_research_graph, web_search, create_detailed_report, research_node
 
 # Custom AG-UI protocol event classes
 class StateDeltaEvent(BaseModel):
@@ -88,7 +88,7 @@ class StateSnapshotEvent(BaseModel):
 app = FastAPI(title="AG-UI Endpoint")
 
 @app.post("/langgraph-research")
-async def langgraph_research_endpoint(input_data: RunAgentInput):
+async def langgraph_research_endpoint(input_data: RunAgentInput ):
     """
     LangGraph-based research processing endpoint.
     
@@ -362,10 +362,14 @@ async def langgraph_research_endpoint(input_data: RunAgentInput):
             print(f"[DEBUG] Executing LangGraph workflow")
             # Execute the LangGraph workflow with the query
             # Convert the AG-UI message to a LangChain message type
-            # Different LangGraph versions have different methods to run graphs
+            # Use async API since research_node is async
             try:
-                # Try newer LangGraph API first
-                if hasattr(graph, 'invoke'):
+                # Use ainvoke for async execution
+                if hasattr(graph, 'ainvoke'):
+                    result = await graph.ainvoke([HumanMessage(content=query)])
+                    print(f"[DEBUG] LangGraph ainvoke API succeeded")
+                elif hasattr(graph, 'invoke'):
+                    # Fall back to sync invoke if ainvoke not available
                     result = graph.invoke([HumanMessage(content=query)])
                     print(f"[DEBUG] LangGraph invoke API succeeded")
                 else:
@@ -374,10 +378,8 @@ async def langgraph_research_endpoint(input_data: RunAgentInput):
                     print(f"[DEBUG] LangGraph older API succeeded")
             except Exception as e:
                 print(f"[DEBUG] LangGraph API failed: {str(e)}")
-                # Try direct function call as last resort
-                result = research_node([HumanMessage(content=query)])
-                print(f"[DEBUG] Direct function call succeeded")
-            
+                raise e  # Re-raise the exception to be caught by outer try block
+                
             print(f"[DEBUG] LangGraph result type: {type(result)}, content: {str(result)[:100]}...")
             
             if isinstance(result, list) and len(result) > 0:

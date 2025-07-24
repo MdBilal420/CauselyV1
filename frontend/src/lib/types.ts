@@ -33,7 +33,8 @@ interface ResearchAgentState {
       | "developing_analysis"
       | "forming_conclusions"
       | "finalizing_report"
-      | "report_complete";
+      | "report_complete"
+      | "error";
     sources_found: number;
     sources?: SearchResult[];
     completed: boolean;
