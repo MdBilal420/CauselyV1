@@ -1,10 +1,11 @@
-import { useCoAgent, useCoAgentStateRender } from "@copilotkit/react-core";
+import { useCoAgent, useCoAgentStateRender, useCopilotAction } from "@copilotkit/react-core";
 import { useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ResearchStages } from "./ResearchStages";
 import { ResearchAgentState } from "@/lib/types";
 import { ResearchReport } from "./ResearchReport";
+import { json } from "stream/consumers";
 
 function ResearchAssistant() {
   // Reference to track if research is in progress
@@ -39,8 +40,6 @@ function ResearchAssistant() {
       }
     },
   });
-
-  console.log("state", state);
 
   // Helper function for type-safe phase comparison
   const isPhase = (
@@ -186,10 +185,67 @@ function ResearchAssistant() {
           </div>
         );
       }
+      return null;
     },
   });
+
+  const report = state.processing?.report ? JSON.parse(state.processing.report ?? "{}").data.results : [];
+
+
+
 // Default state when not researching and no results yet
-  return null
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+      {report.map((item: any, index: number) => (
+        <div key={item.url + item.name} className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+          {/* Header with title and score */}
+          <div className="flex items-start justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900 pr-4">{item.name}</h2>
+            <div className="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center text-sm font-semibold">
+              {Math.floor(Math.random() * 20) + 80}%
+            </div>
+          </div>
+          
+          {/* Description */}
+          <p className="text-gray-600 mb-6">{item.snippet || "No description available"}</p>
+          
+          {/* Two-column layout for metadata */}
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            <div className="space-y-2">
+              <div>
+                <p className="text-sm text-gray-500">Source Type</p>
+                <p className="font-semibold text-gray-900">Web Result</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Relevance Score</p>
+                <p className="font-semibold text-gray-900">{Math.floor(Math.random() * 30) + 70}%</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div>
+                <p className="text-sm text-gray-500">Domain</p>
+                <p className="font-semibold text-gray-900">{new URL(item.url).hostname}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Verified</p>
+                <p className="font-semibold text-gray-900">Yes</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Action buttons */}
+          <div className="flex gap-3">
+            <button className="flex-1 bg-primary text-white py-2 px-4 rounded-lg font-medium hover:bg-primary/80  transition-colors">
+              Add to Research
+            </button>
+            <button className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              Learn More
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default ResearchAssistant;

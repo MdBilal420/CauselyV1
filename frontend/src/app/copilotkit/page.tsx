@@ -3,10 +3,12 @@
 import { UserMessageProps } from "@copilotkit/react-ui";
 import ResearchAssistant from "../components/Researcher";
 import { Header } from "../components/Header";
-
-
 import { CopilotChat } from "@copilotkit/react-ui";
 import { User } from "lucide-react";
+import { AssistantMessage } from "../components/AssistantChat";
+import { useState, useEffect } from "react";
+import { useCoAgent } from "@copilotkit/react-core";
+import { ResearchAgentState } from "@/lib/types";
 
 const CustomUserMessage = (props: UserMessageProps) => {
   // Use app's theme: primary color, rounded-xl, text-primary-foreground, bg-primary, etc.
@@ -28,22 +30,36 @@ const CustomUserMessage = (props: UserMessageProps) => {
 
 
 export default function CopilotKitPage() {
-
   
+  // Connect to the research agent state
+  const { state: researchState } = useCoAgent<ResearchAgentState>({
+    name: "researchAgent",
+  });
+
+
+  const isResearchCompleted = researchState?.research?.stage === "report_complete";
+  const shouldShowTwoColumns = isResearchCompleted;
+
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <main className="flex-1 w-full">
-        <ResearchAssistant />
-        <CopilotChat
-          instructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
-          labels={{
-            title: "Causely",
-            initial: "Hi! 👋 How can I assist you today?",
-          }}
-          className="h-full max-h-[740px] m-4 pb-4 bg-background overflow-hidden rounded-xl border border-border shadow-lg"
-          UserMessage={CustomUserMessage}
-        />
+      <main className={`flex-1 w-full p-4 transition-all duration-500 ease-in-out ${shouldShowTwoColumns ? 'grid grid-cols-1 lg:grid-cols-2 gap-4' : 'flex'}`}>
+        <div className={`transition-all duration-500 ease-in-out ${shouldShowTwoColumns ? 'h-full max-h-[740px]' : 'w-full h-full'}`}>
+          <CopilotChat
+            instructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
+            labels={{
+              title: "Causely",
+              initial: "Hi! 👋 How can I assist you today?",
+            }}
+            className="h-full pb-4 bg-background overflow-hidden rounded-xl border border-border shadow-lg"
+            UserMessage={CustomUserMessage}
+            AssistantMessage={AssistantMessage}
+          />
+        </div>
+        
+        <div className={`transition-all duration-500 ease-in-out ${shouldShowTwoColumns ? 'h-full max-h-[740px] overflow-y-auto opacity-100' : 'h-0 opacity-0 overflow-hidden'}`}>
+          <ResearchAssistant />
+        </div>
       </main>
     </div>
   );
