@@ -1,6 +1,6 @@
 "use client";
 
-import { UserMessageProps } from "@copilotkit/react-ui";
+import { useCopilotChatSuggestions, UserMessageProps } from "@copilotkit/react-ui";
 import ResearchAssistant from "../components/Researcher";
 import { Header } from "../components/Header";
 import { CopilotChat } from "@copilotkit/react-ui";
@@ -9,6 +9,7 @@ import { AssistantMessage } from "../components/AssistantChat";
 import { useState, useEffect } from "react";
 import { useCoAgent } from "@copilotkit/react-core";
 import { ResearchAgentState } from "@/lib/types";
+import { ResearchCanvas } from "../components/ResearchCanvas";
 
 const CustomUserMessage = (props: UserMessageProps) => {
   // Use app's theme: primary color, rounded-xl, text-primary-foreground, bg-primary, etc.
@@ -28,6 +29,16 @@ const CustomUserMessage = (props: UserMessageProps) => {
   );
 };
 
+type AgentState = {
+  model: string;
+  research_question: string;
+  report: string;
+  resources: any[];
+  logs: any[];
+}
+
+const model = "google_genai"
+const agent = "research_agent"
 
 export default function CopilotKitPage() {
   
@@ -36,6 +47,23 @@ export default function CopilotKitPage() {
     name: "researchAgent",
   });
 
+
+  const { state, setState } = useCoAgent<AgentState>({
+    name: agent,
+    initialState: {
+      model,
+      research_question: "",
+      resources: [],
+      report: "",
+      logs: [],
+    },
+  });
+
+  // useCopilotChatSuggestions({
+  //   instructions: "Lifespan of penguins",
+  // });
+
+  console.log("State", state);
 
   const isResearchCompleted = researchState?.research?.stage === "report_complete";
   const shouldShowTwoColumns = isResearchCompleted;
@@ -51,14 +79,23 @@ export default function CopilotKitPage() {
               title: "Causely",
               initial: "Hi! 👋 How can I assist you today?",
             }}
+
+            onSubmitMessage={async (message) => {
+              // clear the logs before starting the new research
+              setState({ ...state, logs: [] });
+              await new Promise((resolve) => setTimeout(resolve, 30));
+            }} 
             className="h-full pb-4 bg-background overflow-hidden rounded-xl border border-border shadow-lg"
             UserMessage={CustomUserMessage}
-            AssistantMessage={AssistantMessage}
+            // AssistantMessage={AssistantMessage}
           />
         </div>
         
         <div className={`transition-all duration-500 ease-in-out ${shouldShowTwoColumns ? 'h-full max-h-[740px] overflow-y-auto opacity-100' : 'h-0 opacity-0 overflow-hidden'}`}>
-          <ResearchAssistant />
+          {/* <ResearchAssistant /> */}
+          <ResearchCanvas />
+          {/* <ResearchAssistant /> */}
+
         </div>
       </main>
     </div>

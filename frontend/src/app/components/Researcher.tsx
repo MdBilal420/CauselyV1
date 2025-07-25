@@ -41,6 +41,8 @@ function ResearchAssistant() {
     },
   });
 
+  console.log("State", state);
+
   // Helper function for type-safe phase comparison
   const isPhase = (
     phase: string | undefined,
@@ -88,106 +90,106 @@ function ResearchAssistant() {
   };
 
   // Use the automatic state rendering hook
-  useCoAgentStateRender<ResearchAgentState>({
-    name: "researchAgent",
-    render: ({ state }) => {
-      // Don't render anything if no state or still in initial state
-      if (!state || state.research.stage === "not_started") {
-        return null;
-      }
+  // useCoAgentStateRender<ResearchAgentState>({
+  //   name: "researchAgent",
+  //   render: ({ state }) => {
+  //     // Don't render anything if no state or still in initial state
+  //     if (!state || state.research.stage === "not_started") {
+  //       return null;
+  //     }
 
-      if (
-        state?.research?.stage &&
-        state.research.stage !== "report_complete" &&
-        state.research.stage !== "error" &&
-        (isResearchInProgress.current || state?.processing?.progress > 0)
-      ) {
-        return (
-          <div className="flex flex-col gap-4 h-full max-w-4xl mx-auto">
-            <div className="p-6 bg-white border rounded-lg shadow-sm w-full">
-              <h3 className="text-xl font-semibold mb-4">
-                Comprehensive Research in Progress
-              </h3>
+  //     if (
+  //       state?.research?.stage &&
+  //       state.research.stage !== "report_complete" &&
+  //       state.research.stage !== "error" &&
+  //       (isResearchInProgress.current || state?.processing?.progress > 0)
+  //     ) {
+  //       return (
+  //         <div className="flex flex-col gap-4 h-full max-w-4xl mx-auto">
+  //           <div className="p-6 bg-white border rounded-lg shadow-sm w-full">
+  //             <h3 className="text-xl font-semibold mb-4">
+  //               Comprehensive Research in Progress
+  //             </h3>
     
-              <div className="status-container mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="font-medium text-gray-800">{getStatusText()}</div>
-                  <div className="text-sm font-medium">
-                    {Math.round(state?.processing?.progress * 100)}%
-                  </div>
-                </div>
+  //             <div className="status-container mb-6">
+  //               <div className="flex items-center justify-between mb-2">
+  //                 <div className="font-medium text-gray-800">{getStatusText()}</div>
+  //                 <div className="text-sm font-medium">
+  //                   {Math.round(state?.processing?.progress * 100)}%
+  //                 </div>
+  //               </div>
     
-                <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-blue-600 rounded-full transition-all duration-300 ease-in-out"
-                    style={{
-                      width: `${state?.processing?.progress * 100}%`,
-                      background:
-                        state?.processing?.progress >= 0.9
-                          ? "linear-gradient(90deg, #4ade80, #22c55e)"
-                          : "linear-gradient(90deg, #60a5fa, #3b82f6)",
-                    }}
-                  />
-                </div>
-              </div>
+  //               <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+  //                 <div
+  //                   className="h-full bg-blue-600 rounded-full transition-all duration-300 ease-in-out"
+  //                   style={{
+  //                     width: `${state?.processing?.progress * 100}%`,
+  //                     background:
+  //                       state?.processing?.progress >= 0.9
+  //                         ? "linear-gradient(90deg, #4ade80, #22c55e)"
+  //                         : "linear-gradient(90deg, #60a5fa, #3b82f6)",
+  //                   }}
+  //                 />
+  //               </div>
+  //             </div>
     
-              {/* Research Stages Tracker */}
-              <ResearchStages state={state} isPhase={isPhase} />
+  //             {/* Research Stages Tracker */}
+  //             <ResearchStages state={state} isPhase={isPhase} />
     
-              {/* Sources count when available */}
-              {state?.research?.sources && state.research.sources.length > 0 && (
-                <div className="mt-4 text-sm text-gray-600">
-                  Found {state.research.sources.length} source
-                  {state.research.sources.length !== 1 ? "s" : ""}
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      }
+  //             {/* Sources count when available */}
+  //             {state?.research?.sources && state.research.sources.length > 0 && (
+  //               <div className="mt-4 text-sm text-gray-600">
+  //                 Found {state.research.sources.length} source
+  //                 {state.research.sources.length !== 1 ? "s" : ""}
+  //               </div>
+  //             )}
+  //           </div>
+  //         </div>
+  //       );
+  //     }
 
-      // Show error state
-      if (state.status.error || state.research.stage === "error") {
-        return (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span className="font-medium text-red-800">Research Error</span>
-            </div>
-            <p className="text-red-700">{state.status.error || "An error occurred during research"}</p>
-          </div>
-        );
-      }
+  //     // Show error state
+  //     if (state.status.error || state.research.stage === "error") {
+  //       return (
+  //         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+  //           <div className="flex items-center gap-2 mb-2">
+  //             <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+  //               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+  //             </svg>
+  //             <span className="font-medium text-red-800">Research Error</span>
+  //           </div>
+  //           <p className="text-red-700">{state.status.error || "An error occurred during research"}</p>
+  //         </div>
+  //       );
+  //     }
 
-      // Show progress state
-      if (state.research.stage !== "report_complete") {
-        return (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-medium text-blue-800">{getStatusText()}</span>
-              <span className="text-sm font-medium text-blue-600">
-                {Math.round(state.processing.progress * 100)}%
-              </span>
-            </div>
-            <div className="h-2 w-full bg-blue-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-600 rounded-full transition-all duration-300"
-                style={{ width: `${state.processing.progress * 100}%` }}
-              />
-            </div>
-            {state.research.sources && state.research.sources.length > 0 && (
-              <div className="mt-2 text-sm text-blue-600">
-                Found {state.research.sources.length} source{state.research.sources.length !== 1 ? "s" : ""}
-              </div>
-            )}
-          </div>
-        );
-      }
-      return null;
-    },
-  });
+  //     // Show progress state
+  //     if (state.research.stage !== "report_complete") {
+  //       return (
+  //         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+  //           <div className="flex items-center justify-between mb-2">
+  //             <span className="font-medium text-blue-800">{getStatusText()}</span>
+  //             <span className="text-sm font-medium text-blue-600">
+  //               {Math.round(state.processing.progress * 100)}%
+  //             </span>
+  //           </div>
+  //           <div className="h-2 w-full bg-blue-200 rounded-full overflow-hidden">
+  //             <div
+  //               className="h-full bg-blue-600 rounded-full transition-all duration-300"
+  //               style={{ width: `${state.processing.progress * 100}%` }}
+  //             />
+  //           </div>
+  //           {state.research.sources && state.research.sources.length > 0 && (
+  //             <div className="mt-2 text-sm text-blue-600">
+  //               Found {state.research.sources.length} source{state.research.sources.length !== 1 ? "s" : ""}
+  //             </div>
+  //           )}
+  //         </div>
+  //       );
+  //     }
+  //     return null;
+  //   },
+  // });
 
   const report = state.processing?.report ? JSON.parse(state.processing.report ?? "{}").data.results : [];
 
