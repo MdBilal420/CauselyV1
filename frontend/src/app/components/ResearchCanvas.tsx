@@ -102,24 +102,9 @@ export function ResearchCanvas() {
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto p-10 bg-background">
-      <div className="space-y-8 pb-10">
-        {/* <div>
-          <h2 className="text-lg font-medium mb-3 text-primary">
-            Research Question
-          </h2>
-          <Input
-            placeholder="Enter your research question"
-            value={state.research_question || ""}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setState({ ...state, research_question: e.target.value })
-            }
-            aria-label="Research question"
-            className="bg-background px-6 py-8 border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 placeholder:text-muted-foreground"
-          />
-        </div> */}
-
-        {resources.length !== 0 && (<div className="mb-4">
+    <div className="w-full h-full overflow-y-auto p-10 bg-[#e1f7f4]">
+      <div className="space-y-8 pb-10 bg-[#e1f7f4]">
+      {resources.length !== 0 && (<div className="mb-4">
             <h2 className="text-lg font-medium text-primary">Resources</h2>  
             <Resources
               resources={resources}

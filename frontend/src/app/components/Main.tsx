@@ -40,9 +40,6 @@ export default function Main() {
         className="flex flex-1 border"
         style={{ height: "calc(100vh - 60px)" }}
       >
-        <div className="flex-1 overflow-hidden">
-          <ResearchCanvas />
-        </div>
         <div
           className="w-[500px] h-full flex-shrink-0"
           style={
@@ -67,6 +64,9 @@ export default function Main() {
               initial: "Hi! How can I assist you with your research today?",
             }}
           />
+        </div>
+        <div className="flex-1 overflow-hidden">
+          <ResearchCanvas />
         </div>
       </div>
     </>
