@@ -27,7 +27,6 @@ export default function Main() {
     },
   });
 
-  console.log("State", state);
 
   useCopilotChatSuggestions({
     instructions: "NGOs in Delhi",

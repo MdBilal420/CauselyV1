@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <CopilotKit
       runtimeUrl="/api/copilotkit"
       agent="research_agent"
-      showDevConsole
+      showDevConsole={true}
     >
       <Main />
     </CopilotKit>

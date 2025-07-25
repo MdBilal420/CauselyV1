@@ -34,13 +34,13 @@ const baseUrl = "http://0.0.0.0:8000/copilotkit"
 let runtime = new CopilotRuntime({
   agents: {
     'research_agent': new LangGraphHttpAgent({
-      url: `${baseUrl}/agents/research_agent/`,
+      url: `${baseUrl}/agents/research_agent`,
     }),
   }
 })
-// const llmAdapter = new GroqAdapter({  model: "deepseek-r1-distill-llama-70b" });
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const llmAdapter = new OpenAIAdapter({ openai } as any);
+const llmAdapter = new GroqAdapter({  model: "deepseek-r1-distill-llama-70b" });
+//  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+//  const llmAdapter = new OpenAIAdapter({ openai } as any);
 
 /**
  * Define the POST handler for the API endpoint
