@@ -59,7 +59,7 @@ async def download_node(state: AgentState, config: RunnableConfig):
             })
 
     # Emit the state to let the UI update
-    await copilotkit_emit_state(config, state)
+    copilotkit_emit_state(config, state)
 
     # Download the resources
     for i, resource in enumerate(resources_to_download):
@@ -67,6 +67,7 @@ async def download_node(state: AgentState, config: RunnableConfig):
         state["logs"][logs_offset + i]["done"] = True
 
         # update UI
-        await copilotkit_emit_state(config, state)
+        copilotkit_emit_state(config, state)
+    
 
     return state

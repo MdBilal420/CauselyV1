@@ -38,7 +38,7 @@ def create_initial_state():
     Create the initial state of the agent.
     """
     return AgentState(
-        model="google_genai",
+        model="openai",
         research_question="",
         report="",
         resources=[],

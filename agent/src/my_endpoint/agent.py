@@ -8,57 +8,23 @@ import os
 from typing import cast
 
 from langchain_core.messages import AIMessage, ToolMessage
-from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, END
-from src.my_endpoint.state import AgentState, create_initial_state
-from src.my_endpoint.download import download_node
-from src.my_endpoint.chat import chat_node
-from src.my_endpoint.search import search_node
-from src.my_endpoint.delete import delete_node, perform_delete_node
-
-
-async def initialize_state_node(state: AgentState, config: RunnableConfig):
-    """
-    Initialize the state with default values for all fields.
-    This ensures that the state has all required fields before the workflow starts.
-    """
-    # Initialize state fields with default values if they don't exist
-    if "resources" not in state:
-        state["resources"] = []
-    if "logs" not in state:
-        state["logs"] = []
-    if "model" not in state:
-        state["model"] = "google_genai"
-    if "research_question" not in state:
-        state["research_question"] = ""
-    if "report" not in state:
-        state["report"] = ""
-    if "messages" not in state:
-        state["messages"] = []
-    
-    # Check for configurable values in the config
-    if config and "configurable" in config:
-        configurable = config["configurable"]
-        # Update state with any configurable values provided
-        for field in ["model", "research_question", "report", "resources", "logs", "messages"]:
-            if field in configurable:
-                state[field] = configurable[field]
-    
-    print("State initialized:", state)
-    return state
-
+from my_endpoint.state import AgentState
+from my_endpoint.download import download_node
+from my_endpoint.chat import chat_node
+from my_endpoint.search import search_node
+from my_endpoint.delete import delete_node, perform_delete_node
 
 # Define a new graph
 workflow = StateGraph(AgentState)
-workflow.add_node("initialize_state", initialize_state_node)
 workflow.add_node("download", download_node)
 workflow.add_node("chat_node", chat_node)
 workflow.add_node("search_node", search_node)
 workflow.add_node("delete_node", delete_node)
 workflow.add_node("perform_delete_node", perform_delete_node)
 
-workflow.set_entry_point("initialize_state")
-workflow.add_edge("initialize_state", "download")
+
+workflow.set_entry_point("download")
 workflow.add_edge("download", "chat_node")
 workflow.add_edge("delete_node", "perform_delete_node")
 workflow.add_edge("perform_delete_node", "chat_node")

@@ -66,7 +66,7 @@ export function Resources({
                   href={resource.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline mt-3 text-slate-400 inline-block"
+                  className="text-sm text-primary hover:underline mt-3 text-muted-foreground inline-block"
                   title={resource.url}
                   style={{
                     width: customWidth ? customWidth - 30 + "px" : "250px",
@@ -100,7 +100,7 @@ export function Resources({
                     }}
                     aria-label={`Remove ${resource.url}`}
                   >
-                    <Trash2 className="w-6 h-6 text-gray-400 hover:text-red-500" />
+                    <Trash2 className="w-6 h-6 text-muted-foreground hover:text-destructive" />
                   </Button>
                 </div>
               )}

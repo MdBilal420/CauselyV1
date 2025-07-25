@@ -37,15 +37,10 @@ type AgentState = {
   logs: any[];
 }
 
-const model = "google_genai"
+const model = "openai"
 const agent = "research_agent"
 
 export default function CopilotKitPage() {
-  
-  // Connect to the research agent state
-  const { state: researchState } = useCoAgent<ResearchAgentState>({
-    name: "researchAgent",
-  });
 
 
   const { state, setState } = useCoAgent<AgentState>({
@@ -63,10 +58,7 @@ export default function CopilotKitPage() {
   //   instructions: "Lifespan of penguins",
   // });
 
-  console.log("State", state);
-
-  const isResearchCompleted = researchState?.research?.stage === "report_complete";
-  const shouldShowTwoColumns = isResearchCompleted;
+  const shouldShowTwoColumns = true;
 
   return (
     <div className="flex flex-col h-screen">
@@ -86,7 +78,7 @@ export default function CopilotKitPage() {
               await new Promise((resolve) => setTimeout(resolve, 30));
             }} 
             className="h-full pb-4 bg-background overflow-hidden rounded-xl border border-border shadow-lg"
-            UserMessage={CustomUserMessage}
+            //UserMessage={CustomUserMessage}
             // AssistantMessage={AssistantMessage}
           />
         </div>

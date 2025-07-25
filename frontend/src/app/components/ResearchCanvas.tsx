@@ -28,7 +28,7 @@ type AgentState = {
 }
 
 
-const model = "google_genai"
+const model = "openai"
 const agent = "research_agent"
 
 export function ResearchCanvas() {
@@ -36,7 +36,7 @@ export function ResearchCanvas() {
   const { state, setState } = useCoAgent<AgentState>({
     name: agent,
     initialState: {
-      model,
+      model
     },
   });
 
@@ -50,53 +50,6 @@ export function ResearchCanvas() {
     },
   });
 
-  useCopilotAction({
-    name: "DeleteResources",
-    description:
-      "Prompt the user for resource delete confirmation, and then perform resource deletion",
-    available: "remote",
-    parameters: [
-      {
-        name: "urls",
-        type: "string[]",
-      },
-    ],
-    renderAndWait: ({ args, status, handler }) => {
-      return (
-        <div
-          className=""
-          data-test-id="delete-resource-generative-ui-container"
-        >
-          <div className="font-bold text-base mb-2">
-            Delete these resources?
-          </div>
-          <Resources
-            resources={resources.filter((resource) =>
-              (args.urls || []).includes(resource.url)
-            )}
-            customWidth={200}
-          />
-          {status === "executing" && (
-            <div className="mt-4 flex justify-start space-x-2">
-              <button
-                onClick={() => handler("NO")}
-                className="px-4 py-2 text-[#6766FC] border border-[#6766FC] rounded text-sm font-bold"
-              >
-                Cancel
-              </button>
-              <button
-                data-test-id="button-delete"
-                onClick={() => handler("YES")}
-                className="px-4 py-2 bg-[#6766FC] text-white rounded text-sm font-bold"
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
-      );
-    },
-  });
 
   const resources: Resource[] = state.resources || [];
   const setResources = (resources: Resource[]) => {
@@ -149,9 +102,9 @@ export function ResearchCanvas() {
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto p-10 bg-[#F5F8FF]">
+    <div className="w-full h-full overflow-y-auto p-10 bg-background">
       <div className="space-y-8 pb-10">
-        <div>
+        {/* <div>
           <h2 className="text-lg font-medium mb-3 text-primary">
             Research Question
           </h2>
@@ -162,46 +115,23 @@ export function ResearchCanvas() {
               setState({ ...state, research_question: e.target.value })
             }
             aria-label="Research question"
-            className="bg-background px-6 py-8 border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 placeholder:text-slate-400"
+            className="bg-background px-6 py-8 border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 placeholder:text-muted-foreground"
           />
-        </div>
+        </div> */}
 
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-medium text-primary">Resources</h2>
-            {/* <EditResourceDialog
-              isOpen={isEditResourceOpen}
-              onOpenChange={setIsEditResourceOpen}
-              editResource={editResource}
-              setEditResource={setEditResource}
-              updateResource={updateResource}
-            />
-            <AddResourceDialog
-              isOpen={isAddResourceOpen}
-              onOpenChange={setIsAddResourceOpen}
-              newResource={newResource}
-              setNewResource={setNewResource}
-              addResource={addResource}
-            /> */}
-          </div>
-          {resources.length === 0 && (
-            <div className="text-sm text-slate-400">
-              Click the button above to add resources.
-            </div>
-          )}
-
-          {resources.length !== 0 && (
+        {resources.length !== 0 && (<div className="mb-4">
+            <h2 className="text-lg font-medium text-primary">Resources</h2>  
             <Resources
               resources={resources}
               handleCardClick={handleCardClick}
               removeResource={removeResource}
             />
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="flex flex-col h-full">
           <h2 className="text-lg font-medium mb-3 text-primary">
-            Research Draft
+            Research
           </h2>
           <Textarea
             data-test-id="research-draft"
@@ -210,7 +140,7 @@ export function ResearchCanvas() {
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setState({ ...state, report: e.target.value })}
             rows={10}
             aria-label="Research draft"
-            className="bg-background px-6 py-8 border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 placeholder:text-slate-400"
+            className="bg-background px-6 py-8 border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 placeholder:text-muted-foreground"
             style={{ minHeight: "200px" }}
           />
         </div>

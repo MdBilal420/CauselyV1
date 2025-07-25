@@ -3,9 +3,7 @@ The search node is responsible for searching the internet for information.
 """
 
 import os
-import json
 import asyncio
-import aiohttp
 from typing import cast, List, Dict, Any
 from pydantic import BaseModel, Field
 from langchain_core.runnables import RunnableConfig

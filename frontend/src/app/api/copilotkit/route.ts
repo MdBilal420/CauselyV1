@@ -1,6 +1,7 @@
 // Import the HttpAgent for making HTTP requests to the backend
 import { HttpAgent } from "@ag-ui/client";
 import { Groq } from "groq-sdk";
+import OpenAI from "openai";
  
 const groq = new Groq({ apiKey: process.env["GROQ_API_KEY"] }); 
 
@@ -9,6 +10,7 @@ import {
   CopilotRuntime,
   GroqAdapter,
   LangGraphHttpAgent,
+  OpenAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
 
@@ -32,14 +34,13 @@ const baseUrl = "http://0.0.0.0:8000/copilotkit"
 let runtime = new CopilotRuntime({
   agents: {
     'research_agent': new LangGraphHttpAgent({
-      url: `${baseUrl}/agents/research_agent`,
+      url: `${baseUrl}/agents/research_agent/`,
     }),
-    'research_agent_google_genai': new LangGraphHttpAgent({
-      url: `${baseUrl}/agents/research_agent_google_genai`,
-    })
   }
 })
-const llmAdapter = new GroqAdapter({  model: "deepseek-r1-distill-llama-70b" });
+// const llmAdapter = new GroqAdapter({  model: "deepseek-r1-distill-llama-70b" });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const llmAdapter = new OpenAIAdapter({ openai } as any);
 
 /**
  * Define the POST handler for the API endpoint

@@ -2,6 +2,7 @@ import { ResearchCanvas } from "./ResearchCanvas";
 import { useCoAgent } from "@copilotkit/react-core";
 import { CopilotChat } from "@copilotkit/react-ui";
 import { useCopilotChatSuggestions } from "@copilotkit/react-ui";
+import { Header } from "./Header";
 
 type AgentState = {
   model: string;
@@ -11,7 +12,7 @@ type AgentState = {
   logs: any[];
 }
 
-const model = "google_genai"
+const model = "openai"
 const agent = "research_agent"
 
 export default function Main() {
@@ -29,14 +30,12 @@ export default function Main() {
   console.log("State", state);
 
   useCopilotChatSuggestions({
-    instructions: "Lifespan of penguins",
+    instructions: "NGOs in Delhi",
   });
 
   return (
     <>
-      <h1 className="flex h-[60px] bg-[#0E103D] text-white items-center px-10 text-2xl font-medium">
-        Research Helper
-      </h1>
+    <Header />
 
       <div
         className="flex flex-1 border"
@@ -49,17 +48,17 @@ export default function Main() {
           className="w-[500px] h-full flex-shrink-0"
           style={
             {
-              "--copilot-kit-background-color": "#E0E9FD",
-              "--copilot-kit-secondary-color": "#6766FC",
-              "--copilot-kit-separator-color": "#b8b8b8",
-              "--copilot-kit-primary-color": "#FFFFFF",
-              "--copilot-kit-contrast-color": "#000000",
+              "--copilot-kit-background-color": "#F5F8FF",
+              "--copilot-kit-secondary-color": "#0E103D",
+              "--copilot-kit-separator-color": "#0E103D",
+              "--copilot-kit-primary-color": "#009597",
+              "--copilot-kit-contrast-color": "#FFFFFF",
               "--copilot-kit-secondary-contrast-color": "#000",
             } as any
           }
         >
           <CopilotChat
-            className="h-full"
+            className="h-full bg-background-primary text-primary"
             onSubmitMessage={async (message) => {
               // clear the logs before starting the new research
               setState({ ...state, logs: [] });

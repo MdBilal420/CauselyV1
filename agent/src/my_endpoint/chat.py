@@ -6,9 +6,10 @@ from langchain_core.messages import SystemMessage, AIMessage, ToolMessage
 from langchain.tools import tool
 from langgraph.types import Command
 from copilotkit.langgraph import copilotkit_customize_config
-from src.my_endpoint.state import AgentState
-from src.my_endpoint.model import get_model
-from src.my_endpoint.download import get_resource
+from my_endpoint.state import AgentState
+from my_endpoint.model import get_model
+from my_endpoint.download import get_resource
+
 
 @tool
 def Search(queries: List[str]): # pylint: disable=invalid-name,unused-argument
@@ -26,12 +27,13 @@ def WriteResearchQuestion(research_question: str): # pylint: disable=invalid-nam
 def DeleteResources(urls: List[str]): # pylint: disable=invalid-name,unused-argument
     """Delete the URLs from the resources."""
 
+
 async def chat_node(state: AgentState, config: RunnableConfig) -> \
     Command[Literal["search_node", "chat_node", "delete_node", "__end__"]]:
     """
     Chat Node
     """
-
+    # print("CHAT NODE STATE", state)
     config = copilotkit_customize_config(
         config,
         emit_intermediate_state=[{
@@ -61,7 +63,6 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
         })
 
     model = get_model(state)
-
     # Prepare the kwargs for the ainvoke method
     ainvoke_kwargs = {}
     if model.__class__.__name__ in ["ChatOpenAI"]:
@@ -97,22 +98,26 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
         ),
         *state["messages"],
     ], config)
+
     ai_message = cast(AIMessage, response)
 
+    # Handle tool calls
     if ai_message.tool_calls:
-        if ai_message.tool_calls[0]["name"] == "WriteReport":
+        tool_name = ai_message.tool_calls[0]["name"]
+        
+        if tool_name == "WriteReport":
             report = ai_message.tool_calls[0]["args"].get("report", "")
             return Command(
                 goto="chat_node",
                 update={
                     "report": report,
                     "messages": [ai_message, ToolMessage(
-                    tool_call_id=ai_message.tool_calls[0]["id"],
-                    content="Report written."
+                        tool_call_id=ai_message.tool_calls[0]["id"],
+                        content="Report written."
                     )]
                 }
             )
-        if ai_message.tool_calls[0]["name"] == "WriteResearchQuestion":
+        elif tool_name == "WriteResearchQuestion":
             return Command(
                 goto="chat_node",
                 update={
@@ -123,16 +128,25 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
                     )]
                 }
             )
+        elif tool_name == "Search":
+            return Command(
+                goto="search_node",
+                update={
+                    "messages": [ai_message]
+                }
+            )
+        elif tool_name == "DeleteResources":
+            return Command(
+                goto="delete_node",
+                update={
+                    "messages": [ai_message]
+                }
+            )
 
-    goto = "__end__"
-    if ai_message.tool_calls and ai_message.tool_calls[0]["name"] == "Search":
-        goto = "search_node"
-    elif ai_message.tool_calls and ai_message.tool_calls[0]["name"] == "DeleteResources":
-        goto = "delete_node"
-
+    # No tool calls, end the conversation
     return Command(
-        goto=goto,
+        goto="__end__",
         update={
-            "messages": response
+            "messages": [ai_message]
         }
     )
