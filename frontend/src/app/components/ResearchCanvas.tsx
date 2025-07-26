@@ -53,6 +53,7 @@ export function ResearchCanvas() {
 
   const resources: Resource[] = state.resources || [];
 
+  console.log("ResearchCanvas state",state);
   return (
     <div className="w-full h-full overflow-y-auto p-10 bg-[#e1f7f4]">
       <div className="space-y-8 pb-10 bg-[#e1f7f4]">

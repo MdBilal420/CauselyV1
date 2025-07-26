@@ -54,7 +54,7 @@ async def download_node(state: AgentState, config: RunnableConfig):
         if not get_resource(resource["url"]):
             resources_to_download.append(resource)
             state["logs"].append({
-                "message": f"Downloading {resource['url']}",
+                "message": f"Looking into {resource['url']}",
                 "done": False
             })
 

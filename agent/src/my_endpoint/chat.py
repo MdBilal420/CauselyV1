@@ -29,7 +29,7 @@ def DeleteResources(urls: List[str]): # pylint: disable=invalid-name,unused-argu
 
 
 async def chat_node(state: AgentState, config: RunnableConfig) -> \
-    Command[Literal["search_node", "chat_node", "delete_node", "__end__"]]:
+    Command[Literal["search_node", "chat_node", "__end__"]]:
     """
     Chat Node
     """
@@ -131,13 +131,6 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
         elif tool_name == "Search":
             return Command(
                 goto="search_node",
-                update={
-                    "messages": [ai_message]
-                }
-            )
-        elif tool_name == "DeleteResources":
-            return Command(
-                goto="delete_node",
                 update={
                     "messages": [ai_message]
                 }
