@@ -52,54 +52,6 @@ export function ResearchCanvas() {
 
 
   const resources: Resource[] = state.resources || [];
-  const setResources = (resources: Resource[]) => {
-    setState({ ...state, resources });
-  };
-
-  // const [resources, setResources] = useState<Resource[]>(dummyResources);
-  const [newResource, setNewResource] = useState<Resource>({
-    url: "",
-    title: "",
-    description: "",
-  });
-  const [isAddResourceOpen, setIsAddResourceOpen] = useState(false);
-
-  const addResource = () => {
-    if (newResource.url) {
-      setResources([...resources, { ...newResource }]);
-      setNewResource({ url: "", title: "", description: "" });
-      setIsAddResourceOpen(false);
-    }
-  };
-
-  const removeResource = (url: string) => {
-    setResources(
-      resources.filter((resource: Resource) => resource.url !== url)
-    );
-  };
-
-  const [editResource, setEditResource] = useState<Resource | null>(null);
-  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
-  const [isEditResourceOpen, setIsEditResourceOpen] = useState(false);
-
-  const handleCardClick = (resource: Resource) => {
-    setEditResource({ ...resource }); // Ensure a new object is created
-    setOriginalUrl(resource.url); // Store the original URL
-    setIsEditResourceOpen(true);
-  };
-
-  const updateResource = () => {
-    if (editResource && originalUrl) {
-      setResources(
-        resources.map((resource) =>
-          resource.url === originalUrl ? { ...editResource } : resource
-        )
-      );
-      setEditResource(null);
-      setOriginalUrl(null);
-      setIsEditResourceOpen(false);
-    }
-  };
 
   return (
     <div className="w-full h-full overflow-y-auto p-10 bg-[#e1f7f4]">
@@ -108,8 +60,6 @@ export function ResearchCanvas() {
             <h2 className="text-lg font-medium text-primary">Resources</h2>  
             <Resources
               resources={resources}
-              handleCardClick={handleCardClick}
-              removeResource={removeResource}
             />
           </div>
         )}

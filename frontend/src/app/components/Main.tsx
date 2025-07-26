@@ -35,7 +35,6 @@ export default function Main() {
   return (
     <>
     <Header />
-
       <div
         className="flex flex-1 border"
         style={{ height: "calc(100vh - 60px)" }}

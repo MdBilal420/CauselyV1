@@ -1,6 +1,4 @@
 import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
-import { Trash2 } from "lucide-react";
 import { truncateUrl } from "./Progress";
 
 
@@ -14,14 +12,10 @@ type Resource = {
 type ResourcesProps = {
   resources: Resource[];
   customWidth?: number;
-  handleCardClick?: (resource: Resource) => void;
-  removeResource?: (url: string) => void;
 };
 
 export function Resources({
   resources,
-  handleCardClick,
-  removeResource,
   customWidth,
 }: ResourcesProps) {
   return (
@@ -30,12 +24,8 @@ export function Resources({
         <Card
           data-test-id={`resource`}
           key={idx}
-          className={
-            "bg-background border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 flex-none" +
-            (handleCardClick ? " cursor-pointer" : "")
-          }
+          className="bg-background border-0 shadow-none rounded-xl text-md font-extralight focus-visible:ring-0 flex-none"
           style={{ width: customWidth + "px" || "320px" }}
-          onClick={() => handleCardClick?.(resource)}
         >
           <CardContent className="px-6 py-6 relative">
             <div className="flex items-start space-x-3 text-sm">
@@ -88,22 +78,6 @@ export function Resources({
                   )}
                 </a>
               </div>
-              {removeResource && (
-                <div className="flex items-start absolute top-4 right-4">
-                  <Button
-                    data-test-id="remove-resource"
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeResource?.(resource.url);
-                    }}
-                    aria-label={`Remove ${resource.url}`}
-                  >
-                    <Trash2 className="w-6 h-6 text-muted-foreground hover:text-destructive" />
-                  </Button>
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>

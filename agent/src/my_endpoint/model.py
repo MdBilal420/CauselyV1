@@ -8,6 +8,7 @@ from src.my_endpoint.state import AgentState
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+
 def get_model(state: AgentState) -> BaseChatModel:
     """
     Get a model based on the environment variable.
@@ -15,6 +16,12 @@ def get_model(state: AgentState) -> BaseChatModel:
 
     state_model = state.get("model")
     model = os.getenv("MODEL", state_model)
+
+    # return ChatOpenAI(
+    #     temperature=0,
+    #     model="bilal-gemini-2.5-flash",
+    #     # api_key=cast(Any, os.getenv("OPENAI_API_KEY")) or None
+    # ) 
 
     if model == "groq":
         from langchain_groq import ChatGroq
@@ -25,11 +32,11 @@ def get_model(state: AgentState) -> BaseChatModel:
         )   
 
     if model == "google_genai":
-        return ChatGoogleGenerativeAI(
+        return ChatOpenAI(
             temperature=0,
-            model="gemini-2.0-flash",
-            api_key=cast(Any, os.getenv("GOOGLE_API_KEY")) or None
-        )
+            model="gpt-4o-mini",
+            api_key=cast(Any, os.getenv("OPENAI_API_KEY")) or None
+        ) 
     
     elif model == "openai":
         return ChatOpenAI(
