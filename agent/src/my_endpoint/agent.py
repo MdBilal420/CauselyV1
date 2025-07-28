@@ -11,6 +11,7 @@ from my_endpoint.download import download_node
 from my_endpoint.chat import chat_node
 from my_endpoint.final_charity_data import final_charity_data_node
 from my_endpoint.search import search_node
+from my_endpoint.charity_research import charity_research_node
 
 # Define a new graph
 workflow = StateGraph(AgentState)
@@ -18,12 +19,14 @@ workflow.add_node("download", download_node)
 workflow.add_node("chat_node", chat_node)
 workflow.add_node("search_node", search_node)
 workflow.add_node("final_charity_data", final_charity_data_node)
+workflow.add_node("charity_research_node", charity_research_node)
 
 
 workflow.set_entry_point("download")
 workflow.add_edge("download", "chat_node")
 workflow.add_edge("search_node", "download")
 workflow.add_edge("final_charity_data", END)
+workflow.add_edge("charity_research_node", "chat_node")
 
 # Conditionally use a checkpointer based on the environment
 # This allows compatibility with both LangGraph API and CopilotKit

@@ -28,9 +28,13 @@ def WriteResearchQuestion(research_question: str): # pylint: disable=invalid-nam
 def DeleteResources(urls: List[str]): # pylint: disable=invalid-name,unused-argument
     """Delete the URLs from the resources."""
 
+@tool
+def ResearchCharity(charity_name: str, charity_url: str = ""): # pylint: disable=invalid-name,unused-argument
+    """Research a specific charity in detail to provide comprehensive information including mission, impact, financials, ratings, and more."""
+
 
 async def chat_node(state: AgentState, config: RunnableConfig) -> \
-    Command[Literal["search_node", "chat_node", "final_charity_data", "__end__"]]:
+    Command[Literal["search_node", "chat_node", "final_charity_data", "charity_research_node", "__end__"]]:
     """
     Chat Node
     """
@@ -76,6 +80,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
             WriteReport,
             WriteResearchQuestion,
             DeleteResources,
+            ResearchCharity,
         ],
         **ainvoke_kwargs  # Pass the kwargs conditionally
     ).ainvoke([
@@ -87,9 +92,11 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
             - First, have a conversation with the user to build their philanthropy profile. Ask about the causes they care about, their geographic focus, and the scale of their intended giving.
             - Once the profile is reasonably complete, use the Search tool to find organizations that match the profile. Formulate queries that are likely to uncover smaller, impactful charities.
             - After searching, use the information to provide the user with a few potential charity recommendations.
+            - If the user wants detailed information about a specific charity, use the ResearchCharity tool to conduct in-depth research.
             - If you have finished writing the report, ask the user proactively for next steps, changes, etc., to make the process engaging.
             - To write the report, you should use the WriteReport tool. Never respond with the report directly; only use the tool.
             - If a research question is provided, YOU MUST NOT ASK FOR IT AGAIN.
+            - When you have charity recommendations, offer to research any of them in detail for the user.
             
 
 
@@ -140,6 +147,16 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
                 goto="search_node",
                 update={
                     "messages": [ai_message]
+                }
+            )
+        elif tool_name == "ResearchCharity":
+            return Command(
+                goto="charity_research_node",
+                update={
+                    "messages": [ai_message, ToolMessage(
+                        tool_call_id=ai_message.tool_calls[0]["id"],
+                        content="Starting detailed charity research..."
+                    )]
                 }
             )
 

@@ -3,7 +3,7 @@ This is the state definition for the AI.
 It defines the state of the agent and the state of the conversation.
 """
 
-from typing import List, TypedDict
+from typing import List, TypedDict, Optional
 from langgraph.graph import MessagesState
 
 class Resource(TypedDict):
@@ -21,6 +21,28 @@ class Log(TypedDict):
     message: str
     done: bool
 
+class DetailedCharityInfo(TypedDict):
+    """
+    Represents detailed information about a charity.
+    """
+    name: str
+    url: str
+    mission: str
+    impact: str
+    programs: List[str]
+    financials: dict
+    leadership: List[str]
+    ratings: dict
+    location: str
+    founded: str
+    size: str
+    beneficiaries: str
+    transparency: str
+    recent_news: List[str]
+    strengths: List[str]
+    concerns: List[str]
+    donation_info: dict
+
 class Charity(TypedDict):
     """
     Represents a charity.
@@ -28,6 +50,7 @@ class Charity(TypedDict):
     name: str
     description: str
     url: str
+    detailed_info: Optional[DetailedCharityInfo]
 
 class AgentState(MessagesState):
     """

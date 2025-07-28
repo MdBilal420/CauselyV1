@@ -43,10 +43,12 @@ const CharityCard: React.FC<{ charity: Charity }> = ({ charity }) => {
       </div>
       
       <div className="flex gap-3">
-        <button className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors flex-1">
-          Add to Portfolio
+        <button 
+          onClick={() => window.open(charity.url, '_blank')}
+          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 hover:cursor-pointer transition-colors flex-1">
+          View Website
         </button>
-        <button className="border border-primary text-primary px-4 py-2 rounded-lg font-medium hover:bg-primary/10 transition-colors flex-1">
+        <button className="border border-primary text-primary px-4 py-2 rounded-lg font-medium hover:bg-primary/10 hover:cursor-pointer transition-colors flex-1">
           Learn More
         </button>
       </div>
