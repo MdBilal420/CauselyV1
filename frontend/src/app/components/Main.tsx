@@ -10,6 +10,7 @@ type AgentState = {
   report: string;
   resources: any[];
   logs: any[];
+  charities: any[];
 }
 
 const model = "openai"
@@ -24,6 +25,7 @@ export default function Main() {
       resources: [],
       report: "",
       logs: [],
+      charities: [],
     },
   });
 
@@ -31,6 +33,11 @@ export default function Main() {
   useCopilotChatSuggestions({
     instructions: "NGOs in Delhi",
   });
+
+  const researchNotStarted = state.logs && 
+                             state.report === "" && 
+                             state.resources.length === 0 && 
+                             state.charities.length === 0
 
   return (
     <>
@@ -43,7 +50,7 @@ export default function Main() {
           className="w-[500px] h-full flex-shrink-0"
           style={
             {
-              "--copilot-kit-background-color": "#F5F8FF",
+              "--copilot-kit-background-color": "#E8E8E2",
               "--copilot-kit-secondary-color": "#0E103D",
               "--copilot-kit-separator-color": "#0E103D",
               "--copilot-kit-primary-color": "#009597",
@@ -53,7 +60,7 @@ export default function Main() {
           }
         >
           <CopilotChat
-            className="h-full bg-background-primary text-primary"
+            className="h-full  bg-background-primary text-primary"
             onSubmitMessage={async (message) => {
               // clear the logs before starting the new research
               setState({ ...state, logs: [] });
@@ -64,9 +71,22 @@ export default function Main() {
             }}
           />
         </div>
-        <div className="flex-1 overflow-hidden">
-          <ResearchCanvas />
-        </div>
+        {!researchNotStarted ? (
+          <div className="flex-1 overflow-hidden">
+            <ResearchCanvas />
+          </div>
+        ) : (
+          <div className="flex-1 bg-[#FCFCF9] overflow-hidden flex items-center justify-center">
+            <div className="text-center">
+              <div className="flex flex-col items-center justify-center h-[50vh]">
+                <h1 className="text-[6vw] font-bold text-primary mb-4 leading-tight">Causely</h1>
+                <p className="text-[2vw]">
+                  <span className="text-black">Smart Giving</span> <span className="text-primary">Made Simple.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

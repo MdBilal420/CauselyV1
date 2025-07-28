@@ -21,6 +21,14 @@ class Log(TypedDict):
     message: str
     done: bool
 
+class Charity(TypedDict):
+    """
+    Represents a charity.
+    """
+    name: str
+    description: str
+    url: str
+
 class AgentState(MessagesState):
     """
     This is the state of the agent.
@@ -31,6 +39,7 @@ class AgentState(MessagesState):
     report: str
     resources: List[Resource]
     logs: List[Log]
+    charities: List[Charity]
 
 
 def create_initial_state():
@@ -42,4 +51,5 @@ def create_initial_state():
         research_question="",
         report="",
         resources=[],
-        logs=[])
+        logs=[],
+        charities=[])

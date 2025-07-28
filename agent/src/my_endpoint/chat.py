@@ -11,6 +11,7 @@ from my_endpoint.model import get_model
 from my_endpoint.download import get_resource
 
 
+
 @tool
 def Search(queries: List[str]): # pylint: disable=invalid-name,unused-argument
     """A list of one or more search queries to find good resources to support the research."""
@@ -29,7 +30,7 @@ def DeleteResources(urls: List[str]): # pylint: disable=invalid-name,unused-argu
 
 
 async def chat_node(state: AgentState, config: RunnableConfig) -> \
-    Command[Literal["search_node", "chat_node", "__end__"]]:
+    Command[Literal["search_node", "chat_node", "final_charity_data", "__end__"]]:
     """
     Chat Node
     """
@@ -48,6 +49,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
     )
 
     state["resources"] = state.get("resources", [])
+    state["charities"] = state.get("charities", [])
     research_question = state.get("research_question", "")
     report = state.get("report", "")
 
@@ -79,12 +81,17 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
     ).ainvoke([
         SystemMessage(
             content=f"""
-            You are a research assistant. You help the user with writing a research report.
-            Do not recite the resources, instead use them to answer the user's question.
-            You should use the search tool to get resources before answering the user's question.
-            If you finished writing the report, ask the user proactively for next steps, changes etc, make it engaging.
-            To write the report, you should use the WriteReport tool. Never EVER respond with the report, only use the tool.
-            If a research question is provided, YOU MUST NOT ASK FOR IT AGAIN.
+            You are a world-class philanthropy advisor. Your goal is to help the user build a detailed philanthropy profile and then use that profile to research and recommend suitable charities.
+            When searching, focus on finding smaller, lesser-known organizations that are highly effective but may not have widespread name recognition. Avoid large, well-known charities that the user likely already knows.
+            
+            - First, have a conversation with the user to build their philanthropy profile. Ask about the causes they care about, their geographic focus, and the scale of their intended giving.
+            - Once the profile is reasonably complete, use the Search tool to find organizations that match the profile. Formulate queries that are likely to uncover smaller, impactful charities.
+            - After searching, use the information to provide the user with a few potential charity recommendations.
+            - If you have finished writing the report, ask the user proactively for next steps, changes, etc., to make the process engaging.
+            - To write the report, you should use the WriteReport tool. Never respond with the report directly; only use the tool.
+            - If a research question is provided, YOU MUST NOT ASK FOR IT AGAIN.
+            
+
 
             This is the research question:
             {research_question}
@@ -136,10 +143,25 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
                 }
             )
 
-    # No tool calls, end the conversation
-    return Command(
-        goto="__end__",
-        update={
-            "messages": [ai_message]
-        }
-    )
+    # No tool calls, check if research is complete
+    # If we have resources and a report, go to final charity data node
+    resources_count = len(state.get("resources", []))
+    has_report = bool(state.get("report", ""))
+    
+    print(f"Research status - Resources: {resources_count}, Has report: {has_report}")
+    
+    if resources_count > 0:
+        print("Research complete, proceeding to final charity data extraction")
+        return Command(
+            goto="final_charity_data",
+        )
+    else:
+        # End the conversation if research is not complete
+        print("Research not complete, ending conversation")
+        return Command(
+            goto="__end__",
+            update={
+                "messages": [ai_message]
+            }
+        )
+
