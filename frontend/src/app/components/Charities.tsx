@@ -1,4 +1,8 @@
 import React from 'react'
+import {  useCopilotChat } from "@copilotkit/react-core";
+import { TextMessage, Role } from "@copilotkit/runtime-client-gql";
+
+
 
 type Charity = {
   title: string;
@@ -7,6 +11,21 @@ type Charity = {
 }   
 
 const CharityCard: React.FC<{ charity: Charity }> = ({ charity }) => {
+
+  const { appendMessage, isLoading } = useCopilotChat();
+
+  const handleLearnMore = async () => {
+    try {
+      await appendMessage(new TextMessage({
+        role: Role.User,
+        content: `Learn more about ${charity.title}`
+      }));
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+
   // Generate random data for demonstration
   const rating = Math.floor(Math.random() * 20) + 80 // 80-99%
   const fundingNeed = Math.floor(Math.random() * 90000) + 10000 // $10k-$100k
@@ -48,7 +67,9 @@ const CharityCard: React.FC<{ charity: Charity }> = ({ charity }) => {
           className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 hover:cursor-pointer transition-colors flex-1">
           View Website
         </button>
-        <button className="border border-primary text-primary px-4 py-2 rounded-lg font-medium hover:bg-primary/10 hover:cursor-pointer transition-colors flex-1">
+        <button 
+        onClick={handleLearnMore}
+        className="border border-primary text-primary px-4 py-2 rounded-lg font-medium hover:bg-primary/10 hover:cursor-pointer transition-colors flex-1">
           Learn More
         </button>
       </div>

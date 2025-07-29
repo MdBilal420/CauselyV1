@@ -44,7 +44,7 @@ async def download_node(state: AgentState, config: RunnableConfig):
     Download resources from the internet.
     """
     state["resources"] = state.get("resources", [])
-    state["logs"] = state.get("logs", [])
+    state["logs"] = []
     resources_to_download = []
 
     logs_offset = len(state["logs"])

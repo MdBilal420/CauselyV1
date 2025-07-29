@@ -167,7 +167,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
     
     print(f"Research status - Resources: {resources_count}, Has report: {has_report}")
     
-    if resources_count > 0:
+    if resources_count > 0 and report:
         print("Research complete, proceeding to final charity data extraction")
         return Command(
             goto="final_charity_data",

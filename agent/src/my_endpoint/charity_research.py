@@ -50,7 +50,7 @@ async def charity_research_node(state: AgentState, config: RunnableConfig) -> \
         )
     
     # Initialize logs for this research
-    state["logs"] = state.get("logs", [])
+    state["logs"] = []
     
     # Add research progress logs
     research_queries = [
@@ -176,7 +176,7 @@ async def charity_research_node(state: AgentState, config: RunnableConfig) -> \
             })
         
         # Clear logs
-        state["logs"] = []
+        # state["logs"] = []
         await copilotkit_emit_state(config, state)
         
         print(f"Completed detailed research for {charity_name}")
