@@ -41,3 +41,5 @@ else:
     from langgraph.checkpoint.memory import MemorySaver
     memory = MemorySaver()
     graph = workflow.compile(checkpointer=memory)
+
+    #graph = workflow.compile()

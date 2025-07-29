@@ -36,7 +36,7 @@ type AgentState = {
 const model = "openai"
 const agent = "research_agent"
 
-export function ResearchCanvas() {
+export function ResearchCanvas({setActiveTab}: any ) {
 
   const { state, setState } = useCoAgent<AgentState>({
     name: agent,
@@ -57,24 +57,15 @@ export function ResearchCanvas() {
 
 
   const resources: Resource[] = state.resources || [];
-  const charities: Charity[] = state.charities || [];
 
-  console.log("ResearchCanvas state",state);
   return (
-    <div className="w-full h-full overflow-y-auto p-10 bg-[#FCFCF9]">
+    <div className=" flex-1 overflow-hidden w-full h-full overflow-y-auto p-10 bg-[#FCFCF9]">
       <div className="space-y-8 pb-10 bg-[#FCFCF9]">
-      {/* {resources.length !== 0 && (<div className="mb-4">
-            <h2 className="text-lg font-medium text-primary">Resources</h2>  
-            <Resources
-              resources={resources}
-            />
-          </div>
-        )} */}
-
         {resources.length !== 0 && (<div className="mb-4">
             <h2 className="text-lg font-medium text-primary"> Recommended Charities</h2>  
             <Charities
               charities={resources}
+              setActiveTab={setActiveTab}
             />
           </div>
         )}  

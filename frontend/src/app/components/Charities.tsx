@@ -10,12 +10,13 @@ type Charity = {
   url: string;
 }   
 
-const CharityCard: React.FC<{ charity: Charity }> = ({ charity }) => {
+const CharityCard: React.FC<{ charity: Charity,setActiveTab:any }> = ({ charity,setActiveTab }) => {
 
   const { appendMessage, isLoading } = useCopilotChat();
 
   const handleLearnMore = async () => {
     try {
+      setActiveTab('Charities')
       await appendMessage(new TextMessage({
         role: Role.User,
         content: `Learn more about ${charity.title}`
@@ -77,12 +78,12 @@ const CharityCard: React.FC<{ charity: Charity }> = ({ charity }) => {
   )
 }
 
-export const Charities = ({ charities }: { charities: Charity[] }) => {
+export const Charities = ({ charities,setActiveTab }: { charities: Charity[],setActiveTab:any }) => {
   return (
     <div className="p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {charities.map((charity, index) => (
-          <CharityCard key={index} charity={charity} />
+          <CharityCard key={index} charity={charity} setActiveTab={setActiveTab} />
         ))}
       </div>
     </div>
