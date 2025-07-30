@@ -20,9 +20,10 @@ class ResourceInput(BaseModel):
     title: str = Field(description="The title of the resource")
     description: str = Field(description="A short description of the resource")
 
+# TODO: INCREASE MAX RESULTS TO 20
 @tool
 def ExtractResources(resources: List[ResourceInput]): # pylint: disable=invalid-name,unused-argument
-    """Extract the 3-5 most relevant resources from a search result."""
+    """Extract up to 6 of the most relevant resources from a search result."""
 
 # Initialize Tavily API key
 tavily_api_key = os.getenv("TAVILY_API_KEY")
@@ -34,13 +35,15 @@ async def async_tavily_search(query: str) -> Dict[str, Any]:
     loop = asyncio.get_event_loop()
     try:
         # Run the synchronous tavily_client.search in a thread pool
+        # TODO: INCREASE MAX RESULTS TO 20
         return await loop.run_in_executor(
             None, 
             lambda: tavily_client.search(
                 query=query,
                 search_depth="advanced",
                 include_answer=True,
-                max_results=10
+                 max_results=6
+                #max_results=5
             )
         )
     except Exception as e:
@@ -96,6 +99,7 @@ async def search_node(state: AgentState, config: RunnableConfig):
         ainvoke_kwargs["parallel_tool_calls"] = False
 
     # figure out which resources to use
+    # TODO: INCREASE MAX RESULTS TO 20
     response = await model.bind_tools(
         [ExtractResources],
         tool_choice="ExtractResources",
@@ -103,7 +107,7 @@ async def search_node(state: AgentState, config: RunnableConfig):
     ).ainvoke([
         SystemMessage(
             content="""
-            You need to extract the 3-5 most relevant resources from the following search results.
+            You need to extract up to 10 of the most relevant resources from the following search results.
             """
         ),
         *state["messages"],
