@@ -1,10 +1,11 @@
 from typing import Literal, cast
-from my_endpoint.download import get_resource
 from langchain_core.messages import AIMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.types import Command
-from my_endpoint.state import AgentState
-from my_endpoint.model import get_model
+
+from download import get_resource
+from state import AgentState
+from model import get_model
 import json
 import re
 

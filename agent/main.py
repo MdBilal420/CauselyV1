@@ -21,7 +21,7 @@ from copilotkit import CopilotKitRemoteEndpoint, LangGraphAGUIAgent
 # from copilotkit.crewai import CrewAIAgent
 # from src.my_endpoint.crewai.agent import ResearchCanvasFlow
 from ag_ui_langgraph import add_langgraph_fastapi_endpoint
-from src.my_endpoint.agent import graph
+from agent import graph
 
 # Local research agent components
 #from src.my_endpoint.langgraph_research_agent import build_research_graph, web_search, create_detailed_report, research_node
@@ -86,7 +86,7 @@ def main():
     - Port: 8000
     - Hot reload: Enabled for development
     """
-    uvicorn.run("src.my_endpoint.main:app", host="0.0.0.0", port=8000, reload=True,
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True,
         reload_dirs=(
             ["."] +
             (["../../../../sdk-python/copilotkit"]

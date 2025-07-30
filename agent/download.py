@@ -6,7 +6,7 @@ import aiohttp
 import html2text
 from copilotkit.langgraph import copilotkit_emit_state
 from langchain_core.runnables import RunnableConfig
-from src.my_endpoint.state import AgentState
+from state import AgentState
 
 _RESOURCE_CACHE = {}
 

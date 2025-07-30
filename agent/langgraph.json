@@ -5,7 +5,7 @@
     "."
   ],
   "graphs": {
-    "research_agent": "./my_endpoint/agent.py:graph"
+    "research_agent": "./agent.py:graph"
   },
   "env": "../.env"
 }

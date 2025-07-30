@@ -4,7 +4,7 @@ This module provides a function to get a model based on the configuration.
 import os
 from typing import cast, Any
 from langchain_core.language_models.chat_models import BaseChatModel
-from src.my_endpoint.state import AgentState
+from state import AgentState
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
