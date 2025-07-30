@@ -54,7 +54,7 @@ export default function Main() {
 
 
   useCopilotChatSuggestions({
-    instructions: "NGOs in Delhi",
+    instructions: "NGOs working for children education",
   });
 
   const researchNotStarted = state.logs &&
@@ -128,7 +128,7 @@ export default function Main() {
             {activeTab === "Charities" && (
               <CharitiesTab charities={charities} />
             )}
-            {activeTab === "Report" && (
+            {/* {activeTab === "Report" && (
               <div className="p-4">
                 <h2 className="text-xl font-semibold mb-4">Report</h2>
                 {state.report ? (
@@ -139,7 +139,7 @@ export default function Main() {
                   <p className="text-gray-500">No report generated yet.</p>
                 )}
               </div>
-            )}
+            )} */}
           </div>
         </div>}
       </div>
