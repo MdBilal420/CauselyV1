@@ -36,9 +36,9 @@ const CharityCard: React.FC<{ charity: Charity,setActiveTab:any }> = ({ charity,
     <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-xl font-bold text-gray-800">{charity.title}</h3>
-        <div className="bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+        {/* <div className="bg-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
           {rating}%
-        </div>
+        </div> */}
       </div>
       
       <p className="text-gray-600 mb-6">{charity.description}</p>
@@ -46,11 +46,11 @@ const CharityCard: React.FC<{ charity: Charity,setActiveTab:any }> = ({ charity,
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <p className="text-sm text-gray-500 mb-1">Funding Need</p>
-          <p className="font-bold text-gray-800">${fundingNeed.toLocaleString()}</p>
+          <p className="font-bold text-gray-800">-</p>
         </div>
         <div>
           <p className="text-sm text-gray-500 mb-1">Cause Area</p>
-          <p className="font-bold text-gray-800">Education</p>
+          <p className="font-bold text-gray-800">-</p>
         </div>
         {/* <div>
           <p className="text-sm text-gray-500 mb-1">Match Score</p>
