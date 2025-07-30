@@ -86,7 +86,7 @@ def main():
     - Port: 8000
     - Hot reload: Enabled for development
     """
-    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True,
+    uvicorn.run("main:app", host="0.0.0.0", port=8080,
         reload_dirs=(
             ["."] +
             (["../../../../sdk-python/copilotkit"]
