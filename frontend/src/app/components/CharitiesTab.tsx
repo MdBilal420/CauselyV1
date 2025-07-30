@@ -1,5 +1,5 @@
 import React from "react"
-import { useCoAgentStateRender } from "@copilotkit/react-core";
+import { useCoAgentStateRender, useCopilotChat } from "@copilotkit/react-core";
 
 
 interface CharityData {
@@ -48,7 +48,7 @@ const CharityCard = ({ charity }: { charity: CharityData }) => {
             <div className="mb-4">
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        <h3 className="text-xl font-semibold text-primary mb-2">
                             {charity.name}
                         </h3>
                         <p className="text-gray-600 mb-3">{charity.description}</p>
@@ -149,39 +149,34 @@ const CharityCard = ({ charity }: { charity: CharityData }) => {
 };
 
 const CharitiesTab = ({ charities }: { charities: CharityData[] }) => {
+
+    const {isLoading} = useCopilotChat()
     
-    useCoAgentStateRender<any>({
-        name: "basic_agent",
-        nodeName: "optionally_specify_a_specific_node",
-        render: ({ status, state, nodeName }) => {
-            if(status === "inProgress")
-                return (
-                    <div className="flex items-center justify-center p-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        <span className="ml-3 text-gray-600">Loading charities...</span>
+
+      if(isLoading){
+        return (
+            <div className="flex w-full h-screen items-center justify-center p-8">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+                <span className="ml-3 text-xl text-gray-600">Loading charities...</span>
+            </div>
+        );
+      }  
+    
+      return (
+         <div className=" flex-1 overflow-hidden w-full h-screen overflow-y-auto p-10 bg-[#FCFCF9]">
+            <div className="space-y-8 pb-10 bg-[#FCFCF9]">
+                {charities && charities.length > 0 ? (
+                    <div className="space-y-6 h-screen overflow-y-auto">
+                        {charities.map((charity, idx) => (
+                            <CharityCard key={idx} charity={charity} />
+                        ))}
                     </div>
-                );
-            else if(status === "complete"){
-                return (
-                    <div className="p-4">
-                        <h2 className="text-xl font-semibold mb-4">Charities</h2>
-                        {charities && charities.length > 0 ? (
-                            <div className="space-y-6 h-screen overflow-y-auto">
-                                {charities.map((charity, idx) => (
-                                    <CharityCard key={idx} charity={charity} />
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="text-gray-500">No charities found yet.</p>
-                        )}
-                    </div>
-                );
-            }
-        },
-      });
-    
-    
-      return <></>
+                ) : (
+                    <p className="text-gray-500">No charities found yet.</p>
+                )}
+            </div>
+        </div>
+    );
 };
 
 

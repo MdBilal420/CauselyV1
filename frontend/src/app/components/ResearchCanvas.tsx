@@ -62,7 +62,6 @@ export function ResearchCanvas({setActiveTab}: any ) {
     <div className=" flex-1 overflow-hidden w-full h-full overflow-y-auto p-10 bg-[#FCFCF9]">
       <div className="space-y-8 pb-10 bg-[#FCFCF9]">
         {resources.length !== 0 && (<div className="mb-4">
-            <h2 className="text-lg font-medium text-primary"> Recommended Charities</h2>  
             <Charities
               charities={resources}
               setActiveTab={setActiveTab}

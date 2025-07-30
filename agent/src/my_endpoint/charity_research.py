@@ -177,7 +177,7 @@ async def charity_research_node(state: AgentState, config: RunnableConfig) -> \
         
         # Clear logs
         # state["logs"] = []
-        await copilotkit_emit_state(config, state)
+        # await copilotkit_emit_state(config, state)
         
         print(f"Completed detailed research for {charity_name}")
         
