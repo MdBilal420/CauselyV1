@@ -3,7 +3,7 @@ name = "my-endpoint"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "John Smith",email = "qaplatformmoderator@gmail.com"}
+    {name = "Bilal",email = "mohdbilal16@gmail.com"}
 ]
 readme = "README.md"
 dependencies = [
