@@ -6,9 +6,9 @@ from langchain_core.messages import SystemMessage, AIMessage, ToolMessage
 from langchain.tools import tool
 from langgraph.types import Command
 from copilotkit.langgraph import copilotkit_customize_config
-from my_endpoint.state import AgentState
-from my_endpoint.model import get_model
-from my_endpoint.download import get_resource
+from src.my_endpoint.state import AgentState
+from src.my_endpoint.model import get_model
+from src.my_endpoint.download import get_resource
 
 
 

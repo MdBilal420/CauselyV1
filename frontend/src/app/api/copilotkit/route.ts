@@ -30,7 +30,7 @@ const researchAgent = new HttpAgent({
 //   },
 // });
 
-const baseUrl = "http://0.0.0.0:8000/copilotkit"
+const baseUrl = "http://0.0.0.0:8080/copilotkit"
 let runtime = new CopilotRuntime({
   agents: {
     'research_agent': new LangGraphHttpAgent({

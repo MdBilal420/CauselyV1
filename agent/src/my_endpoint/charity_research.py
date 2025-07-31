@@ -6,9 +6,9 @@ from typing import Literal, cast, List
 from langchain_core.messages import AIMessage, SystemMessage, ToolMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.types import Command
-from my_endpoint.state import AgentState
-from my_endpoint.model import get_model
-from my_endpoint.search import async_tavily_search
+from src.my_endpoint.state import AgentState
+from src.my_endpoint.model import get_model
+from src.my_endpoint.search import async_tavily_search
 from copilotkit.langgraph import copilotkit_emit_state
 import json
 import asyncio

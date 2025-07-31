@@ -6,12 +6,12 @@ It defines the workflow graph and the entry point for the agent.
 import os
 
 from langgraph.graph import StateGraph, END
-from my_endpoint.state import AgentState
-from my_endpoint.download import download_node
-from my_endpoint.chat import chat_node
-from my_endpoint.final_charity_data import final_charity_data_node
-from my_endpoint.search import search_node
-from my_endpoint.charity_research import charity_research_node
+from src.my_endpoint.state import AgentState
+from src.my_endpoint.download import download_node
+from src.my_endpoint.chat import chat_node
+from src.my_endpoint.final_charity_data import final_charity_data_node
+from src.my_endpoint.search import search_node
+from src.my_endpoint.charity_research import charity_research_node
 
 # Define a new graph
 workflow = StateGraph(AgentState)
