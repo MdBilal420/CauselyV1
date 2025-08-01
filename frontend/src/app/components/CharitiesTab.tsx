@@ -1,5 +1,5 @@
 import React from "react"
-import { useCoAgentStateRender, useCopilotChat } from "@copilotkit/react-core";
+import { useCopilotChat } from "@copilotkit/react-core";
 
 
 interface CharityData {

@@ -6,16 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Loader2, RefreshCw, Sparkles } from "lucide-react";
 
 export function CustomChatInterface() {
-  const {
-    visibleMessages,
-    appendMessage,
-    setMessages,
-    deleteMessage,
-    reloadMessages,
-    stopGeneration,
-    isLoading,
-    reset,
-  } = useCopilotChat();
+  const { visibleMessages, appendMessage, isLoading, reset } = useCopilotChat();
 
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -31,7 +22,9 @@ export function CustomChatInterface() {
 
   const sendMessage = (content: string) => {
     if (content.trim()) {
-      appendMessage(new TextMessage({ content: content.trim(), role: Role.User }));
+      appendMessage(
+        new TextMessage({ content: content.trim(), role: Role.User })
+      );
       setInputValue("");
     }
   };
@@ -51,10 +44,13 @@ export function CustomChatInterface() {
   const formatMessage = (content: string) => {
     // Simple markdown-like formatting
     return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code class="bg-muted px-1 py-0.5 rounded text-sm">$1</code>')
-      .replace(/\n/g, '<br />');
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(
+        /`(.*?)`/g,
+        '<code class="bg-muted px-1 py-0.5 rounded text-sm">$1</code>'
+      )
+      .replace(/\n/g, "<br />");
   };
 
   return (
@@ -66,8 +62,12 @@ export function CustomChatInterface() {
             <Sparkles className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="font-semibold text-foreground">Causely AI Assistant</h2>
-            <p className="text-xs text-muted-foreground">Powered by advanced AI</p>
+            <h2 className="font-semibold text-foreground">
+              Causely AI Assistant
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Powered by advanced AI
+            </p>
           </div>
         </div>
         <button
@@ -87,10 +87,13 @@ export function CustomChatInterface() {
               <Bot className="h-10 w-10 text-primary" />
             </div>
             <div className="space-y-3 max-w-xl">
-              <h3 className="text-2xl font-bold text-foreground">Welcome to Causely!</h3>
+              <h3 className="text-2xl font-bold text-foreground">
+                Welcome to Causely!
+              </h3>
               <p className="text-base text-muted-foreground leading-relaxed">
-                I'm here to help you with your philanthropic journey. Ask me anything about giving, 
-                impact measurement, or finding the right causes to support.
+                I&apos;m here to help you with your philanthropic journey. Ask
+                me anything about giving, impact measurement, or finding the
+                right causes to support.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl w-full">
@@ -98,7 +101,7 @@ export function CustomChatInterface() {
                 "How can I start giving?",
                 "What causes should I support?",
                 "How do I measure impact?",
-                "Tell me about effective altruism"
+                "Tell me about effective altruism",
               ].map((suggestion, index) => (
                 <button
                   key={suggestion}
@@ -114,11 +117,15 @@ export function CustomChatInterface() {
         ) : (
           visibleMessages.map((message, index) => {
             // Type assertion to access message properties
-            const messageAny = message as any;
+            const messageAny = message as unknown as {
+              role: string;
+              content: string;
+              id: string;
+            };
             const isUser = messageAny.role === Role.User;
             const isAssistant = messageAny.role === Role.Assistant;
             const content = messageAny.content || "";
-            
+
             return (
               <div
                 key={message.id}
@@ -132,7 +139,7 @@ export function CustomChatInterface() {
                     <Bot className="h-4 w-4 text-primary" />
                   </div>
                 )}
-                
+
                 <div
                   className={`max-w-[80%] p-4 rounded-2xl ${
                     isUser
@@ -149,7 +156,7 @@ export function CustomChatInterface() {
                     <div
                       className="prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{
-                        __html: formatMessage(content)
+                        __html: formatMessage(content),
                       }}
                     />
                   </div>
@@ -174,7 +181,9 @@ export function CustomChatInterface() {
             <div className="bg-card border border-border text-foreground p-4 rounded-2xl shadow-sm">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                <span className="text-sm text-muted-foreground">Thinking...</span>
+                <span className="text-sm text-muted-foreground">
+                  Thinking...
+                </span>
               </div>
             </div>
           </div>
@@ -211,15 +220,15 @@ export function CustomChatInterface() {
             <span className="hidden sm:inline">Send</span>
           </button>
         </form>
-        
-            {/* Quick actions */}
-            <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
-            <div className="flex items-center gap-4">
-                <span>Press Enter to send</span>
-                <span>•</span>
-                <span>Shift + Enter for new line</span>
-            </div>
-            </div>
+
+        {/* Quick actions */}
+        <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4">
+            <span>Press Enter to send</span>
+            <span>•</span>
+            <span>Shift + Enter for new line</span>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -10,9 +10,9 @@ type Charity = {
   url: string;
 }   
 
-const CharityCard: React.FC<{ charity: Charity,setActiveTab:any }> = ({ charity,setActiveTab }) => {
+const CharityCard: React.FC<{ charity: Charity,setActiveTab:(tab: string) => void }> = ({ charity,setActiveTab }) => {
 
-  const { appendMessage, isLoading } = useCopilotChat();
+  const { appendMessage } = useCopilotChat();
 
   const handleLearnMore = async () => {
     try {
@@ -28,9 +28,9 @@ const CharityCard: React.FC<{ charity: Charity,setActiveTab:any }> = ({ charity,
 
 
   // Generate random data for demonstration
-  const rating = Math.floor(Math.random() * 20) + 80 // 80-99%
-  const fundingNeed = Math.floor(Math.random() * 90000) + 10000 // $10k-$100k
-  const matchScore = Math.floor(Math.random() * 30) + 70 // 70-99%
+  // const rating = Math.floor(Math.random() * 20) + 80 // 80-99%
+  // const fundingNeed = Math.floor(Math.random() * 90000) + 10000 // $10k-$100k
+  // const matchScore = Math.floor(Math.random() * 30) + 70 // 70-99%
   
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -78,7 +78,7 @@ const CharityCard: React.FC<{ charity: Charity,setActiveTab:any }> = ({ charity,
   )
 }
 
-export const Charities = ({ charities,setActiveTab }: { charities: Charity[],setActiveTab:any }) => {
+export const Charities = ({ charities,setActiveTab }: { charities: Charity[],setActiveTab:(tab: string) => void }) => {
   return (
     <div className="p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">

@@ -1,16 +1,12 @@
 // Import the HttpAgent for making HTTP requests to the backend
-import { HttpAgent } from "@ag-ui/client";
-import { Groq } from "groq-sdk";
-import OpenAI from "openai";
- 
-const groq = new Groq({ apiKey: process.env["GROQ_API_KEY"] }); 
+// import { HttpAgent } from "@ag-ui/client";
+
 
 // Import CopilotKit runtime components for setting up the API endpoint
 import {
   CopilotRuntime,
   GroqAdapter,
   LangGraphHttpAgent,
-  OpenAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
 
@@ -18,10 +14,6 @@ import {
 // Import NextRequest type for handling Next.js API requests
 import { NextRequest } from "next/server";
 
-// Create a new HttpAgent instance that connects to the LangGraph research backend running locally
-const researchAgent = new HttpAgent({
-  url: "http://0.0.0.0:8000/copilotkit/agents/research_agent",
-});
 
 // Initialize the CopilotKit runtime with our research agent
 // const runtime = new CopilotRuntime({
@@ -31,7 +23,7 @@ const researchAgent = new HttpAgent({
 // });
 const baseUrl = "https://my-fastapi-service-1061397264130.us-central1.run.app/copilotkit"
 //const baseUrl = "http://0.0.0.0:8080/copilotkit"
-let runtime = new CopilotRuntime({
+const runtime = new CopilotRuntime({
   agents: {
     'research_agent': new LangGraphHttpAgent({
       url: `${baseUrl}/agents/research_agent`,

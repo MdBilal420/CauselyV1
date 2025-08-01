@@ -3,12 +3,11 @@
 import {
   useCoAgent,
   useCoAgentStateRender,
-  useCopilotAction,
 } from "@copilotkit/react-core";
 import { Progress } from "./Progress";
 // import { EditResourceDialog } from "./EditResourceDialog";
 // import { AddResourceDialog } from "./AddResourceDialog";
-import { Resources } from "./Resources";
+// import { Resources } from "./Resources";
 import { Charities } from "./Charities";
 
 type Resource = {
@@ -27,8 +26,8 @@ type AgentState = {
   model: string;
   research_question: string;
   report: string;
-  resources: any[];
-  logs: any[];
+  resources: Array<{ title: string; description: string; url: string }>;
+  logs: Array<{ message: string; timestamp: string }>;
   charities: Charity[];
   }
 
@@ -36,9 +35,9 @@ type AgentState = {
 const model = "openai"
 const agent = "research_agent"
 
-export function ResearchCanvas({setActiveTab}: any ) {
+export function ResearchCanvas({setActiveTab}: {setActiveTab: (tab: string) => void} ) {
 
-  const { state, setState } = useCoAgent<AgentState>({
+  const { state } = useCoAgent<AgentState>({
     name: agent,
     initialState: {
       model
@@ -47,7 +46,7 @@ export function ResearchCanvas({setActiveTab}: any ) {
 
   useCoAgentStateRender({
     name: agent,
-    render: ({ state, nodeName, status }) => {
+    render: ({ state }) => {
       if (!state.logs || state.logs.length === 0) {
         return null;
       }

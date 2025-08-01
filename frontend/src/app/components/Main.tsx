@@ -3,16 +3,53 @@ import { useCoAgent } from "@copilotkit/react-core";
 import { CopilotChat } from "@copilotkit/react-ui";
 import { useCopilotChatSuggestions } from "@copilotkit/react-ui";
 import { Header } from "./Header";
-import React, { useEffect } from "react";
+import React from "react";
 import CharitiesTab from "./CharitiesTab";
+
+interface CharityData {
+  name: string;
+  description: string;
+  url: string;
+  detailed_info: {
+    name: string;
+    url: string;
+    mission: string;
+    impact: string;
+    programs: string[];
+    financials: {
+      revenue: string;
+      expenses: string;
+      efficiency: string;
+    };
+    leadership: string[];
+    ratings: {
+      charity_navigator: string;
+      guidestar: string;
+      other_ratings: string;
+    };
+    location: string;
+    founded: string;
+    size: string;
+    beneficiaries: string;
+    transparency: string;
+    recent_news: string[];
+    strengths: string[];
+    concerns: string[];
+    donation_info: {
+      how_to_donate: string;
+      tax_deductible: string;
+      donation_options: string[];
+    };
+  };
+}
 
 type AgentState = {
   model: string;
   research_question: string;
   report: string;
-  resources: any[];
-  logs: any[];
-  charities: any[];
+  resources: Array<{ title: string; description: string; url: string }>;
+  logs: Array<{ message: string; timestamp: string }>;
+  charities: CharityData[];
 }
 
 const model = "openai"
@@ -37,7 +74,7 @@ const DefaultCanvas = () => {
 
 export default function Main() {
 
-  const [tabs, setTabs] = React.useState(["Recommendation", "Charities", "Report"])
+  const [tabs] = React.useState(["Recommendation", "Charities", "Report"])
   const [activeTab, setActiveTab] = React.useState("Recommendation")
 
   const { state, setState } = useCoAgent<AgentState>({
@@ -84,7 +121,7 @@ export default function Main() {
               "--copilot-kit-primary-color": "#009597",
               "--copilot-kit-contrast-color": "#FFFFFF",
               "--copilot-kit-secondary-contrast-color": "#000",
-            } as any
+            } as React.CSSProperties
           }
         >
           <CopilotChat
