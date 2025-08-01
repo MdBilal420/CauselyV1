@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Use an official Python runtime
-FROM python:3.11-slim
+FROM python:3.12.8-bullseye
 
 # Set working directory
 WORKDIR /app
@@ -28,4 +28,4 @@ ENV PYTHONPATH=/app
 EXPOSE 8080
 
 # Run your main function directly with python (not poetry run)
-CMD ["poetry", "run" ,"python", "-m", "src.my_endpoint.main"]
+CMD ["poetry", "run" ,"python3", "-m", "src.my_endpoint.main"]
