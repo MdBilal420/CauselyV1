@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Header } from "./components/Header";
 
@@ -24,7 +23,7 @@ export default function Home() {
               </h1>
               <p className="max-w-[800px] text-xl text-gray-600 md:text-2xl/relaxed lg:text-xl/relaxed xl:text-2xl/relaxed dark:text-gray-400 animate-fade-in-up animation-delay-400">
                 Our AI systematically discovers charities that match your values, 
-                location, and impact goals—just like the professionals do for the wealthy.
+                location, and impact goals&mdash;just like the professionals do for the wealthy.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-600">
@@ -48,11 +47,11 @@ export default function Home() {
         <div className="container px-4 md:px-6">
           <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-              The Rich Person's Approach to Giving
+              The Rich Person&apos;s Approach to Giving
             </h2>
             <p className="max-w-[85%] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
               Professional philanthropy advisors use a systematic approach. 
-              We've built that same methodology into an AI that works for everyone.
+              We&apos;ve built that same methodology into an AI that works for everyone.
             </p>
           </div>
           
@@ -171,8 +170,8 @@ export default function Home() {
                       <span className="text-sm font-medium">Professional Philanthropy Advisor</span>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-600">"Based on your interest in local education and evidence-based interventions, I recommend exploring these organizations..."</p>
-                      <p className="text-xs text-gray-500">Systematic analysis • Impact evaluation • Strategic recommendations</p>
+                      <p className="text-sm text-gray-600">&quot;Based on your interest in local education and evidence-based interventions, I recommend exploring these organizations...&quot;</p>
+                      <p className="text-xs text-gray-500">Systematic analysis &bull; Impact evaluation &bull; Strategic recommendations</p>
                     </div>
                   </div>
                 </div>
@@ -285,7 +284,7 @@ export default function Home() {
               </h2>
               <p className="max-w-[85%] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                 Start your conversation with your personal philanthropy advisor. 
-                It's free, takes just a few minutes, and could transform how you think about giving.
+                It&apos;s free, takes just a few minutes, and could transform how you think about giving.
               </p>
             </div>
             <Link
@@ -303,7 +302,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
             <h1 className="text-xl font-bold text-primary">Causely</h1>
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-              © 2025 Causely. Democratizing professional philanthropy advice.
+              &copy; 2025 Causely. Democratizing professional philanthropy advice.
             </p>
           </div>
           <div className="flex gap-4">

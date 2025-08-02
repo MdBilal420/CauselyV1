@@ -6,9 +6,10 @@ from langchain_core.messages import SystemMessage, AIMessage, ToolMessage
 from langchain.tools import tool
 from langgraph.types import Command
 from copilotkit.langgraph import copilotkit_customize_config
-from my_endpoint.state import AgentState
-from my_endpoint.model import get_model
-from my_endpoint.download import get_resource
+from src.my_endpoint.state import AgentState
+from src.my_endpoint.model import get_model
+from src.my_endpoint.download import get_resource
+
 
 
 @tool
@@ -27,9 +28,13 @@ def WriteResearchQuestion(research_question: str): # pylint: disable=invalid-nam
 def DeleteResources(urls: List[str]): # pylint: disable=invalid-name,unused-argument
     """Delete the URLs from the resources."""
 
+@tool
+def ResearchCharity(charity_name: str, charity_url: str = ""): # pylint: disable=invalid-name,unused-argument
+    """Research a specific charity in detail to provide comprehensive information including mission, impact, financials, ratings, and more."""
+
 
 async def chat_node(state: AgentState, config: RunnableConfig) -> \
-    Command[Literal["search_node", "chat_node", "delete_node", "__end__"]]:
+    Command[Literal["search_node", "chat_node", "final_charity_data", "charity_research_node", "__end__"]]:
     """
     Chat Node
     """
@@ -48,6 +53,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
     )
 
     state["resources"] = state.get("resources", [])
+    state["charities"] = state.get("charities", [])
     research_question = state.get("research_question", "")
     report = state.get("report", "")
 
@@ -74,17 +80,25 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
             WriteReport,
             WriteResearchQuestion,
             DeleteResources,
+            ResearchCharity,
         ],
         **ainvoke_kwargs  # Pass the kwargs conditionally
     ).ainvoke([
         SystemMessage(
             content=f"""
-            You are a research assistant. You help the user with writing a research report.
-            Do not recite the resources, instead use them to answer the user's question.
-            You should use the search tool to get resources before answering the user's question.
-            If you finished writing the report, ask the user proactively for next steps, changes etc, make it engaging.
-            To write the report, you should use the WriteReport tool. Never EVER respond with the report, only use the tool.
-            If a research question is provided, YOU MUST NOT ASK FOR IT AGAIN.
+            You are a world-class philanthropy advisor. Your goal is to help the user build a detailed philanthropy profile and then use that profile to research and recommend suitable charities.
+            When searching, focus on finding smaller, lesser-known organizations that are highly effective but may not have widespread name recognition. Avoid large, well-known charities that the user likely already knows.
+            
+            - First, have a conversation with the user to build their philanthropy profile. Ask about the causes they care about, their geographic focus, and the scale of their intended giving.
+            - Once the profile is reasonably complete, use the Search tool to find organizations that match the profile. Formulate queries that are likely to uncover smaller, impactful charities.
+            - After searching, use the information to provide the user with a few potential charity recommendations.
+            - If the user wants detailed information about a specific charity, use the ResearchCharity tool to conduct in-depth research.
+            - If you have finished writing the report, ask the user proactively for next steps, changes, etc., to make the process engaging.
+            - To write the report, you should use the WriteReport tool. Never respond with the report directly; only use the tool.
+            - If a research question is provided, YOU MUST NOT ASK FOR IT AGAIN.
+            - When you have charity recommendations, offer to research any of them in detail for the user.
+            
+
 
             This is the research question:
             {research_question}
@@ -135,18 +149,36 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
                     "messages": [ai_message]
                 }
             )
-        elif tool_name == "DeleteResources":
+        elif tool_name == "ResearchCharity":
             return Command(
-                goto="delete_node",
+                goto="charity_research_node",
                 update={
-                    "messages": [ai_message]
+                    "messages": [ai_message, ToolMessage(
+                        tool_call_id=ai_message.tool_calls[0]["id"],
+                        content="Starting detailed charity research..."
+                    )]
                 }
             )
 
-    # No tool calls, end the conversation
-    return Command(
-        goto="__end__",
-        update={
-            "messages": [ai_message]
-        }
-    )
+    # No tool calls, check if research is complete
+    # If we have resources and a report, go to final charity data node
+    resources_count = len(state.get("resources", []))
+    has_report = bool(state.get("report", ""))
+    
+    print(f"Research status - Resources: {resources_count}, Has report: {has_report}")
+    
+    if resources_count > 0 and report:
+        print("Research complete, proceeding to final charity data extraction")
+        return Command(
+            goto="final_charity_data",
+        )
+    else:
+        # End the conversation if research is not complete
+        print("Research not complete, ending conversation")
+        return Command(
+            goto="__end__",
+            update={
+                "messages": [ai_message]
+            }
+        )
+

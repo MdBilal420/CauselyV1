@@ -1,18 +1,18 @@
-import { useCoAgent, useCoAgentStateRender, useCopilotAction } from "@copilotkit/react-core";
-import { useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { ResearchStages } from "./ResearchStages";
-import { ResearchAgentState } from "@/lib/types";
-import { ResearchReport } from "./ResearchReport";
-import { json } from "stream/consumers";
+import { useCoAgent } from "@copilotkit/react-core";
 
 function ResearchAssistant() {
   // Reference to track if research is in progress
-  const isResearchInProgress = useRef(false);
+  // const isResearchInProgress = useRef(false);
+
+  type ResearchAgentState = {
+    status: { phase: string; error: string | null; timestamp?: string };
+    research: { query: string; stage: string; sources_found: number; sources: Array<unknown>; completed: boolean };
+    processing: { progress: number; report: string | null; completed: boolean; inProgress: boolean };
+    ui: { showSources: boolean; showProgress: boolean; activeTab: string };
+  };
 
   // Connect to the agent's state using CopilotKit's useCoAgent hook
-  const { state, stop: stopResearchAgent } = useCoAgent<ResearchAgentState>({
+  const { state } = useCoAgent<ResearchAgentState>({
     name: "researchAgent",
     initialState: {
       status: {
@@ -44,15 +44,15 @@ function ResearchAssistant() {
   console.log("State", state);
 
   // Helper function for type-safe phase comparison
-  const isPhase = (
-    phase: string | undefined,
-    comparePhase: ResearchAgentState["status"]["phase"]
-  ): boolean => {
-    return phase === comparePhase;
-  };
+  // const isPhase = (
+  //   phase: string | undefined,
+  //   comparePhase: ResearchAgentState["status"]["phase"]
+  // ): boolean => {
+  //   return phase === comparePhase;
+  // };
 
   // Helper function to format the status for display
-  const getStatusText = () => {
+  // const getStatusText = () => {
     if (state?.status?.error) {
       return `Error: ${state.status.error}`;
     }
@@ -87,7 +87,7 @@ function ResearchAssistant() {
       default:
         return "Processing...";
     }
-  };
+  // };
 
   // Use the automatic state rendering hook
   // useCoAgentStateRender<ResearchAgentState>({
@@ -198,7 +198,7 @@ function ResearchAssistant() {
 // Default state when not researching and no results yet
   return (
     <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-      {report.map((item: any, index: number) => (
+      {report.map((item: { name: string; url: string; snippet?: string }) => (
         <div key={item.url + item.name} className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
           {/* Header with title and score */}
           <div className="flex items-start justify-between mb-4">
