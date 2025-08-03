@@ -6,7 +6,7 @@ interface CharityData {
     name: string;
     description: string;
     url: string;
-    detailed_info: {
+    detailed_info?: {
         name: string;
         url: string;
         mission: string;
@@ -39,9 +39,36 @@ interface CharityData {
     };
 }
 
-const CharityCard = ({ charity }: { charity: CharityData }) => {
-    const { detailed_info } = charity;
-
+const CharityCard = ({ charity, isLoading }: { charity: CharityData, isLoading : boolean }) => {
+    const { detailed_info } = charity  
+    
+    // If detailed_info is not available, show basic charity info
+    if (!detailed_info) {
+        return (
+            <div className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                <div className="mb-4">
+                    <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                            <h3 className="text-xl font-semibold text-primary mb-2">
+                                {charity.name}
+                            </h3>
+                            <p className="text-gray-600 mb-3">{charity.description}</p>
+                        </div>
+                        <a
+                            href={charity.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ml-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm"
+                        >
+                            Visit Website
+                        </a>
+                    </div>
+                </div>
+                <p className="text-gray-500 italic">Detailed information not yet available</p>
+            </div>
+        );
+    }
+    
     return (
         <div className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
             {/* Header */}
@@ -155,9 +182,51 @@ const CharitiesTab = ({ charities }: { charities: CharityData[] }) => {
 
       if(isLoading){
         return (
-            <div className="flex w-full h-screen items-center justify-center p-8">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
-                <span className="ml-3 text-xl text-gray-600">Loading charities...</span>
+            <div className="flex flex-col gap-8 w-full h-screen items-center justify-center p-8 bg-[#FCFCF9]">
+                {[...Array(1)].map((_, idx) => (
+                    <div
+                        key={idx}
+                        className="w-full max-w-xl border rounded-lg p-6 bg-white shadow-sm animate-pulse"
+                    >
+                        {/* Header skeleton */}
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1">
+                                <div className="h-6 bg-gray-200 rounded w-2/3 mb-2"></div>
+                                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                            </div>
+                            <div className="h-10 w-10 bg-gray-200 rounded-full ml-4"></div>
+                        </div>
+                        {/* Description skeleton */}
+                        <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6 mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        {/* Section skeletons */}
+                        <div className="h-5 bg-gray-200 rounded w-1/4 mb-2"></div>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {[...Array(3)].map((_, i) => (
+                                <div key={i} className="h-6 w-20 bg-gray-200 rounded-full"></div>
+                            ))}
+                        </div>
+                        <div className="h-5 bg-gray-200 rounded w-1/4 mb-2"></div>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {[...Array(2)].map((_, i) => (
+                                <div key={i} className="h-6 w-24 bg-gray-200 rounded-full"></div>
+                            ))}
+                        </div>
+                        {/* Donation info skeleton */}
+                        <div className="border-t pt-4 mt-4">
+                            <div className="h-5 bg-gray-200 rounded w-1/3 mb-2"></div>
+                            <div className="h-4 bg-gray-200 rounded w-2/3 mb-1"></div>
+                            <div className="h-4 bg-gray-200 rounded w-1/2 mb-1"></div>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {[...Array(2)].map((_, i) => (
+                                    <div key={i} className="h-5 w-16 bg-gray-200 rounded"></div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <span className="text-xl text-gray-400 mt-4">Loading charities...</span>
             </div>
         );
       }  
@@ -168,7 +237,7 @@ const CharitiesTab = ({ charities }: { charities: CharityData[] }) => {
                 {charities && charities.length > 0 ? (
                     <div className="space-y-6 h-screen overflow-y-auto">
                         {charities.map((charity, idx) => (
-                            <CharityCard key={idx} charity={charity} />
+                            <CharityCard key={idx} charity={charity} isLoading={isLoading} />
                         ))}
                     </div>
                 ) : (

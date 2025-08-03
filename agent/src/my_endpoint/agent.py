@@ -26,7 +26,7 @@ workflow.set_entry_point("download")
 workflow.add_edge("download", "chat_node")
 workflow.add_edge("search_node", "download")
 workflow.add_edge("final_charity_data", END)
-workflow.add_edge("charity_research_node", "chat_node")
+workflow.add_edge("charity_research_node", END)
 
 # Conditionally use a checkpointer based on the environment
 # This allows compatibility with both LangGraph API and CopilotKit

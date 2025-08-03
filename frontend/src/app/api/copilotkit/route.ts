@@ -21,8 +21,8 @@ import { NextRequest } from "next/server";
 //     researchAgent, // Register the research agent with the runtime
 //   },
 // });
-const baseUrl = "https://my-fastapi-service-1061397264130.us-central1.run.app/copilotkit"
-//const baseUrl = "http://0.0.0.0:8080/copilotkit"
+//const baseUrl = "https://my-fastapi-service-1061397264130.us-central1.run.app/copilotkit"
+const baseUrl = "http://0.0.0.0:8080/copilotkit"
 const runtime = new CopilotRuntime({
   agents: {
     'research_agent': new LangGraphHttpAgent({
