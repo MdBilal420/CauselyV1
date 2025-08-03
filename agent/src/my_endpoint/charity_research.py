@@ -12,6 +12,8 @@ from src.my_endpoint.search import async_tavily_search
 from copilotkit.langgraph import copilotkit_emit_state
 import json
 import asyncio
+from langgraph.graph import END
+
 
 
 async def charity_research_node(state: AgentState, config: RunnableConfig) -> \
@@ -138,11 +140,10 @@ async def charity_research_node(state: AgentState, config: RunnableConfig) -> \
         )
     ], config)
     
-    ai_message = cast(AIMessage, response)
     
     try:
         # Clean the response content
-        content = ai_message.content.strip()
+        content = response.content.strip()
         
         # Try to extract JSON if it's wrapped in markdown
         if content.startswith("```json"):
@@ -182,7 +183,7 @@ async def charity_research_node(state: AgentState, config: RunnableConfig) -> \
         print(f"Completed detailed research for {charity_name}")
         
         return Command(
-            goto="chat_node",
+            goto=END,
             update={
                 "charities": charities,
                 "messages": [
