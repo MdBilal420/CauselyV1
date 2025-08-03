@@ -39,7 +39,7 @@ interface CharityData {
     };
 }
 
-const CharityCard = ({ charity, isLoading }: { charity: CharityData, isLoading : boolean }) => {
+const CharityCard = ({ charity}: { charity: CharityData }) => {
     const { detailed_info } = charity  
     
     // If detailed_info is not available, show basic charity info
@@ -237,7 +237,7 @@ const CharitiesTab = ({ charities }: { charities: CharityData[] }) => {
                 {charities && charities.length > 0 ? (
                     <div className="space-y-6 h-screen overflow-y-auto">
                         {charities.map((charity, idx) => (
-                            <CharityCard key={idx} charity={charity} isLoading={isLoading} />
+                            <CharityCard key={idx} charity={charity} />
                         ))}
                     </div>
                 ) : (
