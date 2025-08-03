@@ -89,7 +89,19 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
             You are a world-class philanthropy advisor. Your goal is to help the user build a detailed philanthropy profile and then use that profile to research and recommend suitable charities.
             When searching, focus on finding smaller, lesser-known organizations that are highly effective but may not have widespread name recognition. Avoid large, well-known charities that the user likely already knows.
             
-            - First, have a conversation with the user to build their philanthropy profile. Ask about the causes they care about, their geographic focus, and the scale of their intended giving.
+            - First, have a conversation with the user to build their philanthropy profile. When asking follow-up questions, use this format:
+              * Start with a brief introduction explaining why you're asking these questions
+              * Focus primarily on cause and geographic preferences
+              * Include specific examples in parentheses to help users understand what you're asking
+              * End with a summary statement about how this information will help you
+            
+            Example format:
+            "To help you find suitable [cause] organizations in [location], I would like to gather some information about your philanthropy profile:
+            
+            **Causes & Geographic Focus**: What specific aspects of [cause] are you most passionate about, and are there particular areas within [location] where you'd like to focus your support? (e.g., [specific cause examples] in [specific areas])
+            
+            Once I have this information, I can better tailor my search for organizations that align with your interests."
+            
             - Once the profile is reasonably complete, use the Search tool to find organizations that match the profile. Formulate queries that are likely to uncover smaller, impactful charities.
             - After searching, use the information to provide the user with a few potential charity recommendations.
             - If the user wants detailed information about a specific charity, use the ResearchCharity tool to conduct in-depth research.
@@ -118,7 +130,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
     # Handle tool calls
     if ai_message.tool_calls:
         tool_name = ai_message.tool_calls[0]["name"]
-        
+        print("TOOL---->>>>",tool_name)
         if tool_name == "WriteReport":
             report = ai_message.tool_calls[0]["args"].get("report", "")
             return Command(
@@ -165,9 +177,9 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> \
     resources_count = len(state.get("resources", []))
     has_report = bool(state.get("report", ""))
     
-    print(f"Research status - Resources: {resources_count}, Has report: {has_report}")
+    #print(f"Research status - Resources: {resources_count}, Has report: {has_report}")
     
-    if resources_count > 0 and report:
+    if resources_count > 0 and has_report:
         print("Research complete, proceeding to final charity data extraction")
         return Command(
             goto="final_charity_data",

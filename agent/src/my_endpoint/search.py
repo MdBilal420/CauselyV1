@@ -23,7 +23,7 @@ class ResourceInput(BaseModel):
 # TODO: INCREASE MAX RESULTS TO 20
 @tool
 def ExtractResources(resources: List[ResourceInput]): # pylint: disable=invalid-name,unused-argument
-    """Extract up to 6 of the most relevant resources from a search result."""
+    """Extract up to 3-5 of the most relevant resources from a search result."""
 
 # Initialize Tavily API key
 tavily_api_key = os.getenv("TAVILY_API_KEY")
@@ -42,7 +42,7 @@ async def async_tavily_search(query: str) -> Dict[str, Any]:
                 query=query,
                 search_depth="advanced",
                 include_answer=True,
-                 max_results=6
+                max_results=5
                 #max_results=5
             )
         )
@@ -73,6 +73,8 @@ async def search_node(state: AgentState, config: RunnableConfig):
     # Use asyncio.gather to run multiple searches in parallel
     tasks = [async_tavily_search(query) for query in queries]
     results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    # print("RESULTS",results)
     
     for i, result in enumerate(results):
         if isinstance(result, Exception):
@@ -107,7 +109,7 @@ async def search_node(state: AgentState, config: RunnableConfig):
     ).ainvoke([
         SystemMessage(
             content="""
-            You need to extract up to 10 of the most relevant resources from the following search results.
+            You need to extract up to 3-5 of the most relevant resources from the following search results.
             """
         ),
         *state["messages"],

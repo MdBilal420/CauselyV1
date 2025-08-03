@@ -2,6 +2,7 @@
 This module contains the implementation of the download_node function.
 """
 
+import asyncio
 import aiohttp
 import html2text
 from copilotkit.langgraph import copilotkit_emit_state
@@ -47,11 +48,13 @@ async def download_node(state: AgentState, config: RunnableConfig):
     state["logs"] = []
     resources_to_download = []
 
+    # print("RESOurces",state["resources"])
+
     logs_offset = len(state["logs"])
 
     # Find resources that are not downloaded
     for resource in state["resources"]:
-        if not get_resource(resource["url"]):
+        if get_resource(resource["url"]):
             resources_to_download.append(resource)
             state["logs"].append({
                 "message": f"Looking into {resource['url']}",
@@ -63,7 +66,8 @@ async def download_node(state: AgentState, config: RunnableConfig):
 
     # Download the resources
     for i, resource in enumerate(resources_to_download):
-        await _download_resource(resource["url"])
+        # await _download_resource(resource["url"])
+        await asyncio.sleep(1)  # Python equivalent of setTimeout
         state["logs"][logs_offset + i]["done"] = True
 
         # update UI
