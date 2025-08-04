@@ -9,7 +9,7 @@ export default function Layout() {
     <CopilotKit
       runtimeUrl="/api/copilotkit"
       agent="research_agent"
-      showDevConsole={true}
+      showDevConsole={false}
     >
       <Main />
     </CopilotKit>
