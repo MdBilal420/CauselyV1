@@ -10,6 +10,7 @@ from typing import Dict, Any, List
 from dotenv import load_dotenv  # Environment variable management
 load_dotenv()  # Load environment variables from .env file
 from fastapi import FastAPI, Request  # Web framework
+from fastapi.middleware.cors import CORSMiddleware  # CORS middleware
 from fastapi.responses import StreamingResponse  # For streaming responses
 from pydantic import BaseModel  # For data validation
 
@@ -30,6 +31,15 @@ from src.my_endpoint.agent import graph
 # Create FastAPI application
 app = FastAPI()
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allow frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 add_langgraph_fastapi_endpoint(
     app=app,
     agent=LangGraphAGUIAgent(
@@ -39,6 +49,11 @@ add_langgraph_fastapi_endpoint(
     ),
     path="/copilotkit/agents/research_agent"
 )
+
+# add a health check endpoint
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 def main():
     """
