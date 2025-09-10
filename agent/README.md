@@ -14,11 +14,11 @@ The AG-UI Research Agent:
 
 ## Prerequisites
 
-- Python 3.10 - 3.12
+- Python 3.12.8
 - Poetry package manager
 - API keys:
   - OpenAI API key
-  - Serper API key (for Google search)
+  - Tavily API key (for search)
 
 ## Setup
 
@@ -27,7 +27,7 @@ The AG-UI Research Agent:
 2. **Install dependencies**
 
    ```bash
-   cd ag-ui-research-agent
+   cd agent
    poetry install
    ```
 
@@ -35,7 +35,7 @@ The AG-UI Research Agent:
    Create a `.env` file in the project root with:
    ```
    OPENAI_API_KEY=your-openai-key
-   SERPER_API_KEY=your-serper-key
+   TAVILY_API_KEY=your-serper-key
    ```
 
 ## Project Structure

@@ -1,25 +1,17 @@
-// Import the CSS styles for CopilotKit UI components
+"use client"
 import "@copilotkit/react-ui/styles.css";
-// Import React and ReactNode type for typing children prop
-import React, { ReactNode } from "react";
-// Import the CopilotKit provider component from the core package
+import React from "react";
 import { CopilotKit } from "@copilotkit/react-core";
+import Main from "../components/Main";
 
-// Get the runtime URL from environment variables
-// This URL points to the CopilotKit runtime API endpoint
-const runtimeUrl = process.env.NEXT_PUBLIC_COPILOTKIT_RUNTIME_URL;
-
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout() {
   return (
     <CopilotKit
-//      runtimeUrl={runtimeUrl} // URL for the CopilotKit runtime API
       runtimeUrl="/api/copilotkit"
-
-      agent="researchAgent" // Specify which agent to use (matches the one defined in route.ts)
-      showDevConsole={false} // Hide the development console in production
+      agent="research_agent"
+      showDevConsole={false}
     >
-      {children}{" "}
-      {/* Render the child components inside the CopilotKit provider */}
+      <Main />
     </CopilotKit>
   );
 }
